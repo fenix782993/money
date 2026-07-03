@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fenix Combat</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, sans-serif;
+            background: radial-gradient(circle at center, #2c1a1a, #0b0606);
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            overflow: hidden;
+            height: 100vh;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .header {
+            margin-top: 10px;
+        }
+        .coin-title {
+            font-size: 14px;
+            color: #ff9f43;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .balance {
+            font-size: 42px;
+            font-weight: 900;
+            color: #ffbd59;
+            text-shadow: 0 0 20px rgba(255,189,89,0.4);
+            margin: 5px 0;
+        }
+        .fenix-container {
+            margin: 40px auto;
+            position: relative;
+            width: 220px;
+            height: 220px;
+        }
+        .fenix-btn {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #ff5e3a, #ff2a6d);
+            border-radius: 50%;
+            box-shadow: 0 0 40px #ff5e3a, inset 0 0 20px rgba(255,255,255,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
+            cursor: pointer;
+            transition: transform 0.05s ease;
+            touch-action: manipulation;
+        }
+        .fenix-btn:active {
+            transform: scale(0.92);
+        }
+        .energy-section {
+            position: absolute;
+            bottom: 40px;
+            left: 20px;
+            right: 20px;
+        }
+        .energy-text {
+            font-size: 16px;
+            color: #ff9f43;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #221414;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #442222;
+        }
+        .progress-fill {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff9f43, #ff5e3a);
+            transition: width 0.1s linear;
+        }
+        .upgrades {
+            position: absolute;
+            bottom: 110px;
+            left: 20px;
+            right: 20px;
+        }
+        .btn-upgrade {
+            background: rgba(255, 94, 58, 0.1);
+            border: 1px solid #ff5e3a;
+            color: #fff;
+            padding: 12px;
+            border-radius: 12px;
+            width: 100%;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .floating-text {
+            position: absolute;
+            color: #ffbd59;
+            font-size: 28px;
+            font-weight: bold;
+            animation: floatUp 0.6s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-100px) scale(0.8); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="coin-title">Баланс FenixCoin</div>
+        <div class="balance">🪙 <span id="balance-val">0</span></div>
+    </div>
+
+    <div class="fenix-container">
+        <div id="fenix" class="fenix-btn">🦅</div>
+    </div>
+
+    <div class="upgrades">
+        <button class="btn-upgrade" onclick="buyUpgrade()">🔥 Прокачать Мультитап (+1 за клик) | 💰 <span id="cost-val">50</span></button>
+    </div>
+
+    <div class="energy-section">
+        <div class="energy-text">⚡️ <span id="energy-val">1000</span> / 1000</div>
+        <div class="progress-bar">
+            <div id="energy-fill" class="progress-fill"></div>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        let balance = 0;
+        let energy = 1000;
+        let maxEnergy = 1000;
+        let clickPower = 1;
+        let upgradeCost = 50;
+
+        const fenixBtn = document.getElementById('fenix');
+        const balanceEl = document.getElementById('balance-val');
+        const energyEl = document.getElementById('energy-val');
+        const energyFill = document.getElementById('energy-fill');
+        const costEl = document.getElementById('cost-val');
+
+        // Логика тапа (с поддержкой мультитача)
+        fenixBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            
+            // Обрабатываем каждый палец отдельно для полноценного закликивания
+            for (let i = 0; i < e.changedTouches.length; i++) {
+                if (energy >= clickPower) {
+                    balance += clickPower;
+                    energy -= clickPower;
+                    
+                    balanceEl.innerText = balance;
+                    updateEnergyUI();
+                    
+                    // Создаем вылетающую цифру плюса в месте тапа
+                    createFloatingText(e.changedTouches[i].clientX, e.changedTouches[i].clientY);
+                }
+            }
+        });
+
+        function createFloatingText(x, y) {
+            const num = document.createElement('div');
+            num.classList.add('floating-text');
+            num.innerText = `+${clickPower}`;
+            num.style.left = `${x - 15}px`;
+            num.style.top = `${y - 30}px`;
+            document.body.appendChild(num);
+            
+            setTimeout(() => num.remove(), 600);
+        }
+
+        function updateEnergyUI() {
+            energyEl.innerText = energy;
+            const pct = (energy / maxEnergy) * 100;
+            energyFill.style.width = `${pct}%`;
+        }
+
+        // Авто-восстановление энергии (+3 энергии в секунду)
+        setInterval(() => {
+            if (energy < maxEnergy) {
+                energy = Math.min(maxEnergy, energy + 3);
+                updateEnergyUI();
+            }
+        }, 1000);
+
+        // Покупка прокачки
+        function buyUpgrade() {
+            if (balance >= upgradeCost) {
+                balance -= upgradeCost;
+                clickPower += 1;
+                upgradeCost = Math.floor(upgradeCost * 2.2);
+                
+                balanceEl.innerText = balance;
+                costEl.innerText = upgradeCost;
+                
+                // Вибрация в Телеграме при успешной покупке
+                if (tg.HapticFeedback) {
+                    tg.HapticFeedback.notificationOccurred('success');
+                }
+            } else {
+                alert("Не хватает FenixCoin!");
+            }
+        }
+    </script>
+</body>
+</html> 
