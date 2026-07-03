@@ -2,13 +2,20 @@ import os
 import asyncio
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.client.session.aiohttp import AiohttpSession
+from aiogram.client.default import DefaultBotProperties
 
-# Токен берется из вкладки "Переменные" в Amvera
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-# Твоя рабочая ссылка на кликер с GitHub!
 WEBAPP_URL = "https://fenix782993.github.io/money/"
 
-bot = Bot(token=BOT_TOKEN)
+# Добавляем увеличенный таймаут для запросов к Telegram
+session = AiohttpSession(timeout=60.0)
+
+bot = Bot(
+    token=BOT_TOKEN, 
+    session=session, 
+    default=DefaultBotProperties(parse_mode="HTML")
+)
 dp = Dispatcher()
 
 @dp.message(F.text == "/start")
@@ -28,7 +35,14 @@ async def start_game(message: types.Message):
 
 async def main():
     print("🟢 Бот успешно запущен на сервере Amvera и готов к работе!")
-    await dp.start_polling(bot)
+    
+    # Бесконечный цикл перезапуска на случай падения сети
+    while True:
+        try:
+            await dp.start_polling(bot, skip_updates=True)
+        except Exception as e:
+            print(f"⚠️ Ошибка сети: {e}. Повторный запуск через 5 секунд...")
+            await asyncio.sleep(5)
 
 if __name__ == '__main__':
     asyncio.run(main())
