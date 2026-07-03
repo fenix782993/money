@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -6,215 +6,381 @@
     <title>Fenix Combat</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body {
-            font-family: 'SF Pro Display', -apple-system, sans-serif;
-            background: radial-gradient(circle at center, #2c1a1a, #0b0606);
-            color: #fff;
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-            overflow: hidden;
-            height: 100vh;
+        * {
             box-sizing: border-box;
-            -webkit-user-select: none;
             user-select: none;
+            -webkit-user-select: none;
         }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0a0f1d;
+            color: #ffffff;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        /* Шапка с прибылью */
         .header {
-            margin-top: 10px;
+            background: linear-gradient(180deg, #10192f 0%, #0a0f1d 100%);
+            padding: 15px;
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 2px solid #1e2d5a;
+            text-align: center;
         }
-        .coin-title {
-            font-size: 14px;
-            color: #ff9f43;
-            letter-spacing: 2px;
+        .header-stat {
+            flex: 1;
+        }
+        .stat-val {
+            font-size: 18px;
+            font-weight: bold;
+            color: #00d2ff;
+        }
+        .stat-lbl {
+            font-size: 11px;
+            color: #7688a9;
             text-transform: uppercase;
+            margin-top: 3px;
+        }
+        /* Главный контейнер для вкладок */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: none;
+        }
+        .content.active {
+            display: block;
+        }
+        /* Экран кликера */
+        #clicker-screen {
+            text-align: center;
+        }
+        .balance-container {
+            margin: 20px 0;
         }
         .balance {
             font-size: 42px;
-            font-weight: 900;
-            color: #ffbd59;
-            text-shadow: 0 0 20px rgba(255,189,89,0.4);
-            margin: 5px 0;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
         }
-        .fenix-container {
-            margin: 40px auto;
-            position: relative;
-            width: 220px;
-            height: 220px;
+        .coin-label {
+            color: #00d2ff;
+            font-size: 16px;
+            font-weight: 600;
         }
-        .fenix-btn {
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, #ff5e3a, #ff2a6d);
+        .click-area {
+            width: 230px;
+            height: 230px;
             border-radius: 50%;
-            box-shadow: 0 0 40px #ff5e3a, inset 0 0 20px rgba(255,255,255,0.5);
+            background: radial-gradient(circle, #1a2f63 0%, #0d1630 100%);
+            border: 4px solid #00d2ff;
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.3);
+            margin: 40px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 100px;
             cursor: pointer;
             transition: transform 0.05s ease;
-            touch-action: manipulation;
         }
-        .fenix-btn:active {
-            transform: scale(0.92);
+        .click-area:active {
+            transform: scale(0.95);
         }
-        .energy-section {
-            position: absolute;
-            bottom: 40px;
-            left: 20px;
-            right: 20px;
+        .click-area img {
+            width: 140px;
+            height: 140px;
+            filter: drop-shadow(0 0 15px #00d2ff);
         }
-        .energy-text {
-            font-size: 16px;
-            color: #ff9f43;
-            margin-bottom: 8px;
-            font-weight: bold;
+        /* Сетка карточек */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
         }
-        .progress-bar {
-            width: 100%;
-            height: 12px;
-            background: #221414;
-            border-radius: 6px;
-            overflow: hidden;
-            border: 1px solid #442222;
-        }
-        .progress-fill {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, #ff9f43, #ff5e3a);
-            transition: width 0.1s linear;
-        }
-        .upgrades {
-            position: absolute;
-            bottom: 110px;
-            left: 20px;
-            right: 20px;
-        }
-        .btn-upgrade {
-            background: rgba(255, 94, 58, 0.1);
-            border: 1px solid #ff5e3a;
-            color: #fff;
-            padding: 12px;
+        .card {
+            background: #10192f;
+            border: 1px solid #1e2d5a;
             border-radius: 12px;
-            width: 100%;
-            font-weight: bold;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-title {
             font-size: 14px;
-            cursor: pointer;
-        }
-        .floating-text {
-            position: absolute;
-            color: #ffbd59;
-            font-size: 28px;
             font-weight: bold;
-            animation: floatUp 0.6s ease-out forwards;
-            pointer-events: none;
+            color: #ffffff;
         }
-        @keyframes floatUp {
-            0% { opacity: 1; transform: translateY(0) scale(1); }
-            100% { opacity: 0; transform: translateY(-100px) scale(0.8); }
+        .card-profit {
+            font-size: 12px;
+            color: #00d2ff;
+            margin: 5px 0 10px 0;
+        }
+        .card-btn {
+            background: #0052cc;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .card-btn:disabled {
+            background: #1a2235;
+            color: #4e5d7c;
+        }
+        /* Промокоды */
+        .promo-container {
+            background: #10192f;
+            border: 1px solid #1e2d5a;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .promo-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #1e2d5a;
+            background: #0a0f1d;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .promo-btn {
+            background: #00d2ff;
+            color: #0a0f1d;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            width: 100%;
+        }
+        /* Нижнее меню (Вкладки) */
+        .nav-bar {
+            background: #10192f;
+            border-top: 2px solid #1e2d5a;
+            display: flex;
+            height: 70px;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #7688a9;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .nav-item.active {
+            color: #00d2ff;
+            background: rgba(0, 210, 255, 0.03);
+        }
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="coin-title">Баланс FenixCoin</div>
-        <div class="balance">🪙 <span id="balance-val">0</span></div>
+        <div class="header-stat">
+            <div class="stat-val" id="profit-per-click">1</div>
+            <div class="stat-lbl">За тап</div>
+        </div>
+        <div class="header-stat">
+            <div class="stat-val" id="profit-per-hour">+0</div>
+            <div class="stat-lbl">В час</div>
+        </div>
     </div>
 
-    <div class="fenix-container">
-        <div id="fenix" class="fenix-btn">🦅</div>
+    <div id="clicker-screen" class="content active">
+        <div class="balance-container">
+            <div class="coin-label">БАЛАНС FENIXCOIN</div>
+            <div class="balance" id="balance-display">0</div>
+        </div>
+        
+        <div class="click-area" id="phoenix-clicker">
+            <span style="font-size: 70px;">🦅</span>
+        </div>
     </div>
 
-    <div class="upgrades">
-        <button class="btn-upgrade" onclick="buyUpgrade()">🔥 Прокачать Мультитап (+1 за клик) | 💰 <span id="cost-val">50</span></button>
+    <div id="upgrades-screen" class="content">
+        <h2 style="margin-top:0; color:#00d2ff; font-size: 20px;">Майнинг / Карточки</h2>
+        <div class="cards-grid">
+            
+            <div class="card">
+                <div class="card-title">Быстрые Сервера</div>
+                <div class="card-profit">Доход: +100/час</div>
+                <button class="card-btn" onclick="buyCard('servers', 100, 100)">Купить: 100</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Бот-Помощник</div>
+                <div class="card-profit">Доход: +500/час</div>
+                <button class="card-btn" onclick="buyCard('helper', 500, 500)">Купить: 500</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Маркетинг</div>
+                <div class="card-profit">Доход: +1200/час</div>
+                <button class="card-btn" onclick="buyCard('marketing', 1200, 1200)">Купить: 1200</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Крипто Альянс</div>
+                <div class="card-profit">Доход: +4000/час</div>
+                <button class="card-btn" onclick="buyCard('alliance', 4000, 4000)">Купить: 4000</button>
+            </div>
+
+        </div>
     </div>
 
-    <div class="energy-section">
-        <div class="energy-text">⚡️ <span id="energy-val">1000</span> / 1000</div>
-        <div class="progress-bar">
-            <div id="energy-fill" class="progress-fill"></div>
+    <div id="profile-screen" class="content">
+        <h2 style="margin-top:0; color:#00d2ff; font-size: 20px;">Профиль игрока</h2>
+        <div class="promo-container" style="margin-bottom: 20px; text-align: left;">
+            <p style="margin: 5px 0;"><strong>Статус:</strong> CEO Fenix Combat</p>
+            <p style="margin: 5px 0;"><strong>Лига:</strong> Bronze Tier</p>
+        </div>
+
+        <h3 style="color:#ffffff; font-size: 16px;">Активация промокода</h3>
+        <div class="promo-container">
+            <input type="text" id="promo-input" class="promo-input" placeholder="ВВЕДИТЕ ПРОМОКОД">
+            <button class="promo-btn" onclick="claimPromo()">Активировать</button>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="switchTab('clicker-screen', this)">
+            <div class="nav-icon">🪙</div>
+            <div>Кликер</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('upgrades-screen', this)">
+            <div class="nav-icon">⛏️</div>
+            <div>Улучшения</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('profile-screen', this)">
+            <div class="nav-icon">👤</div>
+            <div>Профиль</div>
         </div>
     </div>
 
     <script>
+        // Инициализация WebApp Телеграма
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        let balance = 0;
-        let energy = 1000;
-        let maxEnergy = 1000;
-        let clickPower = 1;
-        let upgradeCost = 50;
+        // Игровые переменные с загрузкой из памяти
+        let balance = parseFloat(localStorage.getItem('fenix_balance')) || 0;
+        let profitPerHour = parseInt(localStorage.getItem('fenix_pph')) || 0;
+        let profitPerSecond = profitPerHour / 3600;
 
-        const fenixBtn = document.getElementById('fenix');
-        const balanceEl = document.getElementById('balance-val');
-        const energyEl = document.getElementById('energy-val');
-        const energyFill = document.getElementById('energy-fill');
-        const costEl = document.getElementById('cost-val');
+        // Структура уровней для карточек
+        let cardsOwned = JSON.parse(localStorage.getItem('fenix_cards')) || {
+            servers: 0,
+            helper: 0,
+            marketing: 0,
+            alliance: 0
+        };
 
-        // Логика тапа (с поддержкой мультитача)
-        fenixBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            
-            // Обрабатываем каждый палец отдельно для полноценного закликивания
-            for (let i = 0; i < e.changedTouches.length; i++) {
-                if (energy >= clickPower) {
-                    balance += clickPower;
-                    energy -= clickPower;
-                    
-                    balanceEl.innerText = balance;
-                    updateEnergyUI();
-                    
-                    // Создаем вылетающую цифру плюса в месте тапа
-                    createFloatingText(e.changedTouches[i].clientX, e.changedTouches[i].clientY);
-                }
-            }
+        // Элементы страницы
+        const balanceDisplay = document.getElementById('balance-display');
+        const pphDisplay = document.getElementById('profit-per-hour');
+        const clicker = document.getElementById('phoenix-clicker');
+
+        // Функция сохранения всех данных в память телефона
+        function saveGame() {
+            localStorage.setItem('fenix_balance', balance);
+            localStorage.setItem('fenix_pph', profitPerHour);
+            localStorage.setItem('fenix_cards', JSON.stringify(cardsOwned));
+        }
+
+        // Первичный вывод данных при входе
+        updateUI();
+
+        // Клик по Фениксу
+        clicker.addEventListener('click', () => {
+            balance += 1;
+            updateUI();
+            saveGame();
         });
 
-        function createFloatingText(x, y) {
-            const num = document.createElement('div');
-            num.classList.add('floating-text');
-            num.innerText = `+${clickPower}`;
-            num.style.left = `${x - 15}px`;
-            num.style.top = `${y - 30}px`;
-            document.body.appendChild(num);
+        // Переключение вкладок
+        function switchTab(screenId, element) {
+            document.querySelectorAll('.content').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             
-            setTimeout(() => num.remove(), 600);
+            document.getElementById(screenId).classList.add('active');
+            element.classList.add('active');
         }
 
-        function updateEnergyUI() {
-            energyEl.innerText = energy;
-            const pct = (energy / maxEnergy) * 100;
-            energyFill.style.width = `${pct}%`;
-        }
-
-        // Авто-восстановление энергии (+3 энергии в секунду)
-        setInterval(() => {
-            if (energy < maxEnergy) {
-                energy = Math.min(maxEnergy, energy + 3);
-                updateEnergyUI();
-            }
-        }, 1000);
-
-        // Покупка прокачки
-        function buyUpgrade() {
-            if (balance >= upgradeCost) {
-                balance -= upgradeCost;
-                clickPower += 1;
-                upgradeCost = Math.floor(upgradeCost * 2.2);
+        // Покупка карточек прокачки
+        function buyCard(cardId, price, profitAdd) {
+            if (balance >= price) {
+                balance -= price;
+                profitPerHour += profitAdd;
+                profitPerSecond = profitPerHour / 3600;
+                cardsOwned[cardId] = (cardsOwned[cardId] || 0) + 1;
                 
-                balanceEl.innerText = balance;
-                costEl.innerText = upgradeCost;
-                
-                // Вибрация в Телеграме при успешной покупке
-                if (tg.HapticFeedback) {
-                    tg.HapticFeedback.notificationOccurred('success');
-                }
+                updateUI();
+                saveGame();
+                alert('Улучшение успешно куплено! Уровень: ' + cardsOwned[cardId]);
             } else {
-                alert("Не хватает FenixCoin!");
+                alert('Недостаточно FenixCoin для покупки!');
             }
         }
+
+        // Система Промокодов
+        function claimPromo() {
+            const code = document.getElementById('promo-input').value.trim().toUpperCase();
+            const usedPromos = JSON.parse(localStorage.getItem('fenix_used_promos')) || [];
+
+            if (usedPromos.includes(code)) {
+                alert('Вы уже активировали этот промокод!');
+                return;
+            }
+
+            if (code === 'FENIX2026') {
+                balance += 5000;
+                usedPromos.push(code);
+                localStorage.setItem('fenix_used_promos', JSON.stringify(usedPromos));
+                
+                updateUI();
+                saveGame();
+                alert('Промокод активирован! +5000 FenixCoin!');
+                document.getElementById('promo-input').value = '';
+            } else {
+                alert('Неверный или просроченный промокод!');
+            }
+        }
+
+        // Обновление цифр на экране
+        function updateUI() {
+            balanceDisplay.innerText = Math.floor(balance);
+            pphDisplay.innerText = '+' + profitPerHour;
+        }
+
+        // Таймер для пассивного дохода
+        setInterval(() => {
+            if (profitPerSecond > 0) {
+                balance += profitPerSecond;
+                updateUI();
+            }
+            saveGame();
+        }, 1000);
     </script>
 </body>
-</html>  
+</html>
