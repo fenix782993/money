@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fenix Combat Premium</title>
+    <title>Fenix Combat Ultimate Owner Edition</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg-color: #0d101d;
-            --panel-bg: #151a2e;
-            --border-color: #222b45;
-            --accent-blue: #0088cc;
-            --neon-glow: #00f0ff;
-            --text-muted: #6b7c96;
+            --bg-color: #0c0806;
+            --panel-bg: #1a110b;
+            --border-color: #331f14;
+            --accent-orange: #ff6a00;
+            --neon-gold: #ffd700;
+            --text-muted: #8c7363;
+            --lock-color: #ff3b30;
         }
 
         * {
@@ -26,17 +27,16 @@
         body {
             background-color: var(--bg-color);
             color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             height: 100vh;
         }
 
-        /* ТОР-Панель (Прибыль, Лиги) */
         .top-bar {
-            background: linear-gradient(180deg, #161c33 0%, var(--bg-color) 100%);
-            padding: 12px 16px;
+            background: linear-gradient(180deg, #26160c 0%, var(--bg-color) 100%);
+            padding: 14px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -44,19 +44,20 @@
         }
 
         .league-badge {
-            background: rgba(0, 240, 255, 0.1);
-            border: 1px solid var(--neon-glow);
-            padding: 4px 10px;
+            background: rgba(255, 106, 0, 0.1);
+            border: 1px solid var(--accent-orange);
+            padding: 5px 12px;
             border-radius: 20px;
             font-size: 11px;
             font-weight: bold;
-            color: var(--neon-glow);
+            color: var(--neon-gold);
             text-transform: uppercase;
+            box-shadow: 0 0 10px rgba(255, 106, 0, 0.2);
         }
 
         .stats-container {
             display: flex;
-            gap: 15px;
+            gap: 14px;
         }
 
         .stat-box {
@@ -64,17 +65,17 @@
         }
 
         .stat-box .val {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
-            color: #fff;
+            color: #ffffff;
         }
 
         .stat-box .lbl {
             font-size: 10px;
             color: var(--text-muted);
+            text-transform: uppercase;
         }
 
-        /* Контентная зона */
         .main-content {
             flex: 1;
             overflow-y: auto;
@@ -86,7 +87,6 @@
             display: block;
         }
 
-        /* ЭКРАН 1: КЛИКЕР */
         #screen-clicker {
             text-align: center;
             display: flex;
@@ -96,66 +96,67 @@
         }
 
         .score-container {
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
         .score-title {
             font-size: 11px;
-            color: var(--neon-glow);
-            letter-spacing: 1.5px;
-            font-weight: bold;
+            color: var(--text-muted);
+            letter-spacing: 2px;
         }
 
         .score-val {
             font-size: 44px;
             font-weight: 900;
-            margin-top: 5px;
-            background: linear-gradient(180deg, #ffffff 0%, #a6c0fe 100%);
+            margin-top: 4px;
+            background: linear-gradient(180deg, #ffffff 0%, var(--neon-gold) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 10px rgba(0,240,255,0.2));
+            filter: drop-shadow(0 0 12px rgba(255,106,0,0.3));
         }
 
         .circle-wrapper {
             margin: auto;
             position: relative;
-            width: 250px;
-            height: 250px;
+            width: 230px;
+            height: 230px;
         }
 
         .click-circle {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: radial-gradient(circle, #1f294d 0%, #0a0e1a 100%);
-            border: 5px solid #1c233d;
-            box-shadow: 0 0 40px rgba(0, 136, 204, 0.3), inset 0 0 20px rgba(0, 240, 255, 0.1);
+            background: radial-gradient(circle, #3a1a05 0%, #0c0806 100%);
+            border: 4px solid #4a270f;
+            box-shadow: 0 0 40px rgba(255, 106, 0, 0.4), inset 0 0 20px rgba(255, 215, 0, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: transform 0.05s ease;
+            overflow: hidden;
         }
 
         .click-circle:active {
-            transform: scale(0.96);
-            border-color: var(--neon-glow);
+            transform: scale(0.95);
+            border-color: var(--neon-gold);
         }
 
-        .click-circle span {
-            font-size: 100px;
-            filter: drop-shadow(0 0 20px rgba(0,240,255,0.4));
+        .click-circle img {
+            width: 85%;
+            height: 85%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 25px rgba(255,106,0,0.6));
         }
 
         .energy-container {
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
-            padding: 10px 16px;
-            border-radius: 12px;
+            padding: 12px 16px;
+            border-radius: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
         }
 
         .energy-text {
@@ -165,24 +166,22 @@
 
         .energy-bar {
             width: 120px;
-            height: 6px;
-            background: #222b45;
-            border-radius: 4px;
+            height: 7px;
+            background: #24160e;
+            border-radius: 5px;
             overflow: hidden;
         }
 
         .energy-fill {
             height: 100%;
             width: 100%;
-            background: linear-gradient(90deg, #0088cc, var(--neon-glow));
-            transition: width 0.2s;
+            background: linear-gradient(90deg, var(--accent-orange), var(--neon-gold));
         }
 
-        /* ЭКРАН 2: УЛУЧШЕНИЯ / КАТЕГОРИИ */
         .sub-tabs {
             display: flex;
-            gap: 8px;
-            margin-bottom: 15px;
+            gap: 6px;
+            margin-bottom: 16px;
         }
 
         .sub-tab-btn {
@@ -190,30 +189,29 @@
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
             color: var(--text-muted);
-            padding: 8px;
-            border-radius: 8px;
-            font-size: 11px;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 12px;
             font-weight: bold;
-            cursor: pointer;
         }
 
         .sub-tab-btn.active {
-            background: var(--accent-blue);
+            background: var(--accent-orange);
             color: #fff;
-            border-color: var(--neon-glow);
+            border-color: var(--neon-gold);
         }
 
         .cards-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            padding-bottom: 30px;
+            padding-bottom: 40px;
         }
 
         .card {
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
-            border-radius: 14px;
+            border-radius: 16px;
             padding: 12px;
             display: flex;
             flex-direction: column;
@@ -221,20 +219,36 @@
             position: relative;
         }
 
+        .card.locked {
+            border-color: var(--lock-color);
+            background: #240f11;
+        }
+
         .card-lvl {
             position: absolute;
             top: 10px;
             right: 10px;
             font-size: 10px;
-            background: #222b45;
-            padding: 2px 6px;
+            background: #2d1b10;
+            padding: 3px 6px;
             border-radius: 6px;
-            color: var(--neon-glow);
+            color: var(--neon-gold);
+            font-weight: bold;
         }
 
-        .card-icon {
-            font-size: 24px;
+        .card-img-wrapper {
+            width: 100%;
+            height: 70px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #0c0806;
             margin-bottom: 6px;
+        }
+
+        .card-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .card-name {
@@ -243,44 +257,39 @@
             margin-bottom: 4px;
         }
 
-        .card-profit-lbl {
-            font-size: 10px;
+        .card-desc {
+            font-size: 9px;
             color: var(--text-muted);
+            margin-bottom: 6px;
+            line-height: 1.2;
         }
 
         .card-profit-val {
             font-size: 11px;
             color: #00ffaa;
-            font-weight: 600;
-            margin-bottom: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
         }
 
         .card-buy-btn {
             width: 100%;
-            background: #1e2746;
-            border: 1px solid #2d3a66;
+            background: #2b1a10;
+            border: 1px solid #4a2c1b;
             color: #fff;
-            padding: 8px;
-            border-radius: 8px;
+            padding: 9px;
+            border-radius: 10px;
             font-size: 12px;
             font-weight: bold;
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .card-buy-btn:active:not(:disabled) {
-            background: var(--accent-blue);
         }
 
         .card-buy-btn:disabled {
-            opacity: 0.4;
+            background: #1f0d0e;
+            border-color: #421619;
+            color: var(--lock-color);
             cursor: not-allowed;
         }
 
-        /* ЭКРАН 3: ПРОФИЛЬ И АДМИНКА */
         .profile-card {
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
@@ -290,40 +299,30 @@
         }
 
         .admin-panel {
-            background: #21101a;
-            border: 1px solid #ff0055;
+            background: #240808;
+            border: 2px solid var(--accent-orange);
             border-radius: 16px;
             padding: 16px;
-            margin-top: 20px;
+            margin-top: 15px;
             display: none;
-        }
-
-        .admin-title {
-            color: #ff0055;
-            font-size: 14px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
+            box-shadow: 0 0 15px rgba(255, 106, 0, 0.2);
         }
 
         .admin-btn {
-            background: #ff0055;
-            color: #fff;
+            background: var(--accent-orange);
+            color: white;
             border: none;
             padding: 10px;
             border-radius: 8px;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 11px;
+            margin-right: 6px;
+            margin-bottom: 6px;
             cursor: pointer;
-            margin-right: 5px;
-            margin-bottom: 5px;
         }
 
-        /* МЕНЮ НАВИГАЦИИ (НИЖНЕЕ) */
         .nav-menu {
-            background: #11162a;
+            background: #0c0806;
             border-top: 1px solid var(--border-color);
             display: flex;
             height: 68px;
@@ -338,21 +337,19 @@
             justify-content: center;
             color: var(--text-muted);
             font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
+            font-weight: bold;
         }
 
         .nav-btn.active {
-            color: var(--neon-glow);
-            background: linear-gradient(180deg, rgba(0,240,255,0.02) 0%, rgba(0,0,0,0) 100%);
+            color: var(--neon-gold);
+            background: linear-gradient(180deg, rgba(255,106,0,0.03) 0%, rgba(0,0,0,0) 100%);
         }
 
         .nav-btn-icon {
-            font-size: 18px;
-            margin-bottom: 3px;
+            font-size: 19px;
+            margin-bottom: 2px;
         }
 
-        /* Поле ввода промокодов */
         .input-group {
             display: flex;
             gap: 8px;
@@ -361,7 +358,7 @@
 
         .input-field {
             flex: 1;
-            background: #090d1a;
+            background: #0c0806;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 10px;
@@ -370,9 +367,9 @@
         }
 
         .action-btn {
-            background: var(--accent-blue);
+            background: var(--accent-orange);
             border: none;
-            color: #fff;
+            color: white;
             padding: 10px 16px;
             border-radius: 8px;
             font-weight: bold;
@@ -383,7 +380,7 @@
 <body>
 
     <div class="top-bar">
-        <div class="league-badge" id="player-league">Ранг: 1</div>
+        <div class="league-badge" id="player-league">Загрузка...</div>
         <div class="stats-container">
             <div class="stat-box">
                 <div class="val" id="top-mult">+1</div>
@@ -404,13 +401,13 @@
 
         <div class="circle-wrapper">
             <div class="click-circle" id="main-tap-target">
-                <span>🦅</span>
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80" alt="Fenix">
             </div>
         </div>
 
         <div class="energy-container">
             <div style="display: flex; align-items: center; gap: 8px;">
-                <span>⚡</span>
+                <span>🔥</span>
                 <div class="energy-text"><span id="current-energy">3000</span>/<span id="max-energy">3000</span></div>
             </div>
             <div class="energy-bar">
@@ -429,11 +426,9 @@
         <div id="cat-markets" class="category-block">
             <div class="cards-grid" id="grid-markets"></div>
         </div>
-
         <div id="cat-team" class="category-block" style="display:none;">
             <div class="cards-grid" id="grid-team"></div>
         </div>
-
         <div id="cat-legal" class="category-block" style="display:none;">
             <div class="cards-grid" id="grid-legal"></div>
         </div>
@@ -441,27 +436,35 @@
 
     <div id="screen-profile" class="main-content">
         <div class="profile-card">
-            <h3 style="margin-bottom: 8px; color: var(--neon-glow)">Личный Профиль</h3>
-            <p style="font-size: 13px; color: var(--text-muted)">Статус владельца: <span style="color:#fff">CEO Fenix Corp</span></p>
-            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Текущий уровень титула: <span id="profile-title-num" style="color:var(--neon-glow)">1/250</span></p>
+            <h3 style="margin-bottom: 6px; color: var(--neon-gold)">CEO Панель</h3>
+            <p style="font-size: 13px;">Твой ID: <span id="user-id-display" style="color:#fff">-</span></p>
+            <p style="font-size: 13px; margin-top: 4px;">Лига Феникса: <span id="profile-title-num" style="color:var(--accent-orange)">1/250</span></p>
         </div>
 
         <div class="profile-card">
-            <h3 style="font-size: 14px; margin-bottom: 8px;">Ввести Секретный Промокод</h3>
+            <h3 style="font-size: 14px; margin-bottom: 8px;">Активация Промокода</h3>
             <div class="input-group">
-                <input type="text" id="promo-field" class="input-field" placeholder="КОД...">
+                <input type="text" id="promo-field" class="input-field" placeholder="Введи промокод">
                 <button class="action-btn" onclick="usePromoCode()">Ввод</button>
             </div>
         </div>
 
         <div class="admin-panel" id="admin-zone">
-            <div class="admin-title">
-                <span>Панель Создателя (Админка)</span>
-                <span style="cursor:pointer" onclick="document.getElementById('admin-zone').style.display='none'">❌</span>
+            <h3 style="color:var(--neon-gold); margin-bottom:12px; font-size:14px;">🔥 ПАНЕЛЬ СОЗДАТЕЛЯ ИГРЫ (810823857)</h3>
+            
+            <div style="margin-bottom: 12px;">
+                <button class="admin-btn" onclick="adminGiveMoney(5000000)">+5М Маней</button>
+                <button class="admin-btn" onclick="adminGiveMoney(100000000)">+100М Маней</button>
+                <button class="admin-btn" onclick="adminGivePPH(500000)">+500К/час</button>
+                <button class="admin-btn" onclick="adminResetAll()" style="background:#4d1010;">Вайпнуть всё</button>
             </div>
-            <button class="admin-btn" onclick="adminGiveMoney()">+1,000,000 Монет</button>
-            <button class="admin-btn" onclick="adminGivePPH()">+50,000 в час</button>
-            <button class="admin-btn" onclick="adminResetAll()" style="background:#330011; border:1px solid #ff0055;">Полный вайп данных</button>
+
+            <div style="border-top: 1px solid var(--border-color); padding-top: 10px;">
+                <p style="font-size: 12px; margin-bottom: 6px; color: var(--neon-gold);">Создать кастомный промокод для людей:</p>
+                <input type="text" id="adm-promo-name" class="input-field" placeholder="Название (напр. GIFT)" style="margin-bottom:6px;">
+                <input type="number" id="adm-promo-reward" class="input-field" placeholder="Сумма награды">
+                <button class="action-btn" style="width:100%; margin-top:6px;" onclick="adminCreatePromo()">Выпустить Промокод</button>
+            </div>
         </div>
     </div>
 
@@ -484,56 +487,60 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Данные игры
-        let game = JSON.parse(localStorage.getItem('f_combat_v2')) || {
+        const OWNER_ID = 810823857;
+        let userId = tg.initDataUnsafe?.user?.id || 0;
+        document.getElementById('user-id-display').innerText = userId || "Браузер";
+
+        let game = JSON.parse(localStorage.getItem('f_combat_v5_ultimate')) || {
             balance: 0,
             pph: 0,
             mult: 1,
             energy: 3000,
             maxEnergy: 3000,
-            cards: {}
+            cards: {},
+            customPromos: {} // База данных созданных админом промокодов
         };
 
-        // Конфигурация карточек (12 штук как в Хамстере)
+        // Структура карточек с зависимостями и апгрейдом маны/клика
         const CARDS_DATA = [
-            { id: 'm_btc', name: 'BTC Pairs', basePrice: 100, baseProfit: 15, cat: 'markets', icon: '₿' },
-            { id: 'm_eth', name: 'ETH Pairs', basePrice: 500, baseProfit: 75, cat: 'markets', icon: '♦' },
-            { id: 'm_sol', name: 'SOL Pairs', basePrice: 2000, baseProfit: 320, cat: 'markets', icon: '☀️' },
-            { id: 'm_meme', name: 'Meme Coins', basePrice: 8000, baseProfit: 1100, cat: 'markets', icon: '🐕' },
+            { id: 'm_btc', name: 'BTC Pairs', basePrice: 1000, baseProfit: 90, energyBonus: 100, clickBonus: 1, cat: 'markets', reqCard: null, reqLvl: 0, img: 'https://images.unsplash.com/photo-1621416894569-0f39ed31d247?auto=format&fit=crop&w=150&q=80' },
+            { id: 'm_eth', name: 'ETH Pairs', basePrice: 15000, baseProfit: 1200, energyBonus: 250, clickBonus: 2, cat: 'markets', reqCard: 'm_btc', reqLvl: 3, img: 'https://images.unsplash.com/photo-1622790698141-94e304bcbb06?auto=format&fit=crop&w=150&q=80' },
+            { id: 'm_sol', name: 'SOL Pairs', basePrice: 180000, baseProfit: 15000, energyBonus: 800, clickBonus: 5, cat: 'markets', reqCard: 'm_eth', reqLvl: 5, img: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=150&q=80' },
+            { id: 'm_meme', name: 'Meme Tech Pro', basePrice: 2500000, baseProfit: 180000, energyBonus: 3000, clickBonus: 15, cat: 'markets', reqCard: 'm_sol', reqLvl: 7, img: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=150&q=80' },
             
-            { id: 't_tg', name: 'Telegram Channel', basePrice: 200, baseProfit: 25, cat: 'team', icon: '📢' },
-            { id: 't_youtube', name: 'YouTube Show', basePrice: 1000, baseProfit: 140, cat: 'team', icon: '🎬' },
-            { id: 't_tiktok', name: 'TikTok Viral', basePrice: 4000, baseProfit: 550, cat: 'team', icon: '🎵' },
-            { id: 't_reddit', name: 'Reddit Community', basePrice: 15000, baseProfit: 2100, cat: 'team', icon: '🤖' },
+            { id: 't_tg', name: 'Fenix Channel', basePrice: 2000, baseProfit: 150, energyBonus: 120, clickBonus: 1, cat: 'team', reqCard: null, reqLvl: 0, img: 'https://images.unsplash.com/photo-1614680376593-902f74fa0d41?auto=format&fit=crop&w=150&q=80' },
+            { id: 't_youtube', name: 'Fenix Studio', basePrice: 35000, baseProfit: 2900, energyBonus: 400, clickBonus: 3, cat: 'team', reqCard: 't_tg', reqLvl: 4, img: 'https://images.unsplash.com/photo-1548372290-8d01b6c8e78c?auto=format&fit=crop&w=150&q=80' },
+            { id: 't_tiktok', name: 'Viral Content', basePrice: 400000, baseProfit: 32000, energyBonus: 1500, clickBonus: 8, cat: 'team', reqCard: 't_youtube', reqLvl: 5, img: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=150&q=80' },
+            { id: 't_reddit', name: 'Global Reddit', basePrice: 6000000, baseProfit: 550000, energyBonus: 6000, clickBonus: 30, cat: 'team', reqCard: 't_tiktok', reqLvl: 6, img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=150&q=80' },
             
-            { id: 'l_kyc', name: 'KYC Verification', basePrice: 1000, baseProfit: 130, cat: 'legal', icon: '🆔' },
-            { id: 'l_sec', name: 'SEC License', basePrice: 5000, baseProfit: 680, cat: 'legal', icon: '⚖️' },
-            { id: 'l_dubai', name: 'Dubai Office', basePrice: 25000, baseProfit: 3500, cat: 'legal', icon: '🏢' },
-            { id: 'l_bank', name: 'Crypto Bank Corp', basePrice: 100000, baseProfit: 15000, cat: 'legal', icon: '🏦' }
+            { id: 'l_kyc', name: 'Global KYC', basePrice: 10000, baseProfit: 850, energyBonus: 200, clickBonus: 2, cat: 'legal', reqCard: null, reqLvl: 0, img: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=150&q=80' },
+            { id: 'l_sec', name: 'SEC Pass', basePrice: 120000, baseProfit: 11000, energyBonus: 900, clickBonus: 4, cat: 'legal', reqCard: 'l_kyc', reqLvl: 4, img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=150&q=80' },
+            { id: 'l_dubai', name: 'Dubai HQ Office', basePrice: 1800000, baseProfit: 160000, energyBonus: 4500, clickBonus: 20, cat: 'legal', reqCard: 'l_sec', reqLvl: 5, img: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=150&q=80' },
+            { id: 'l_bank', name: 'Fenix Bank Corp', basePrice: 50000000, baseProfit: 4800000, energyBonus: 50000, clickBonus: 150, cat: 'legal', reqCard: 'l_dubai', reqLvl: 6, img: 'https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=150&q=80' }
         ];
 
-        // Первичная инициализация структуры карточек
         CARDS_DATA.forEach(c => {
             if (game.cards[c.id] === undefined) game.cards[c.id] = 0;
         });
 
-        // Расчет титулов (200+ уровней)
+        if (userId === OWNER_ID || userId === 0) {
+            document.getElementById('admin-zone').style.display = 'block';
+        }
+
         function getTitleInfo(bal) {
-            let lvl = Math.floor(Math.sqrt(bal / 50)) + 1;
-            if (lvl > 250) lvl = 250; 
-            
-            let name = "Новичок";
-            if (lvl > 20) name = "Менеджер";
-            if (lvl > 50) name = "Инвестор";
-            if (lvl > 90) name = "Магнат";
-            if (lvl > 140) name = "Грандмастер";
-            if (lvl > 200) name = "Крипто Лорд";
-            
+            let lvl = Math.floor(Math.sqrt(bal / 35)) + 1;
+            if (lvl > 250) lvl = 250;
+            let name = "Хомяк-Феникс";
+            if (lvl > 15) name = "Менеджер Маней";
+            if (lvl > 45) name = "Крипто Инвестор";
+            if (lvl > 90) name = "Золотой Магнат";
+            if (lvl > 150) name = "Ультра Грандмастер";
+            if (lvl > 210) name = "Бессмертный Овнер";
             return { lvl: lvl, text: `${name} (${lvl} ур)` };
         }
 
         function save() {
-            localStorage.setItem('f_combat_v2', JSON.stringify(game));
+            localStorage.setItem('f_combat_v5_ultimate', JSON.stringify(game));
         }
 
         function updateUI() {
@@ -551,50 +558,64 @@
             document.getElementById('profile-title-num').innerText = tInfo.lvl + " / 250";
         }
 
-        // Рендеринг карточек
         function renderCards() {
             const grids = { markets: 'grid-markets', team: 'grid-team', legal: 'grid-legal' };
             Object.values(grids).forEach(id => document.getElementById(id).innerHTML = '');
 
             CARDS_DATA.forEach(c => {
                 let currentLvl = game.cards[c.id] || 0;
-                // Формула удорожания: базовая цена * 1.6 в степени уровня
-                let currentPrice = Math.floor(c.basePrice * Math.pow(1.6, currentLvl));
+                // Множитель экспоненциального роста цены для 500+ уровней
+                let currentPrice = Math.floor(c.basePrice * Math.pow(1.68, currentLvl));
                 let currentProfit = c.baseProfit * (currentLvl + 1);
 
+                let isLocked = false;
+                let lockText = "";
+                if (c.reqCard) {
+                    let parentLvl = game.cards[c.reqCard] || 0;
+                    if (parentLvl < c.reqLvl) {
+                        isLocked = true;
+                        let parentName = CARDS_DATA.find(x => x.id === c.reqCard).name;
+                        lockText = `Нужен ${parentName} ${c.reqLvl} ур.`;
+                    }
+                }
+
+                let btnHtml = isLocked 
+                    ? `<button class="card-buy-btn" disabled>${lockText}</button>`
+                    : `<button class="card-buy-btn" id="btn-${c.id}" onclick="buyUpgrade('${c.id}', ${currentPrice}, ${c.baseProfit}, ${c.energyBonus}, ${c.clickBonus})">🪙 ${currentPrice.toLocaleString()}</button>`;
+
                 let cardHtml = `
-                    <div class="card">
+                    <div class="card ${isLocked ? 'locked' : ''}">
                         <div class="card-lvl">Lvl ${currentLvl}</div>
-                        <div class="card-icon">${c.icon}</div>
+                        <div class="card-img-wrapper">
+                            <img src="${c.img}" alt="${c.name}">
+                        </div>
                         <div class="card-name">${c.name}</div>
-                        <div class="card-profit-lbl">Прибыль в час</div>
-                        <div class="card-profit-val">+${currentProfit}</div>
-                        <button class="card-buy-btn" id="btn-${c.id}" onclick="buyUpgrade('${c.id}', ${currentPrice}, ${c.baseProfit})">
-                            🪙 ${currentPrice.toLocaleString()}
-                        </button>
+                        <div class="card-desc">Доход +${c.baseProfit}/ч<br>⚡ Мана +${c.energyBonus}<br>⚡ Клик +${c.clickBonus}</div>
+                        <div class="card-profit-val">+${currentProfit.toLocaleString()}/ч</div>
+                        ${btnHtml}
                     </div>
                 `;
                 document.getElementById(grids[c.cat]).insertAdjacentHTML('beforeend', cardHtml);
                 
-                if(game.balance < currentPrice) {
+                if(!isLocked && game.balance < currentPrice) {
                     document.getElementById(`btn-${c.id}`).disabled = true;
                 }
             });
         }
 
-        // Покупка апгрейда
-        window.buyUpgrade = function(id, price, profitAdd) {
+        window.buyUpgrade = function(id, price, profitAdd, energyAdd, clickAdd) {
             if (game.balance >= price) {
                 game.balance -= price;
                 game.cards[id]++;
                 game.pph += profitAdd;
+                game.maxEnergy += energyAdd; // Мана растет!
+                game.mult += clickAdd;       // Сила клика растет!
                 save();
                 updateUI();
                 renderCards();
             }
         };
 
-        // Клик по экрану
         document.getElementById('main-tap-target').addEventListener('click', () => {
             if (game.energy >= game.mult) {
                 game.energy -= game.mult;
@@ -604,7 +625,6 @@
             }
         });
 
-        // Навигация по вкладкам меню
         window.navigate = function(screenId, element) {
             document.querySelectorAll('.main-content').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -613,7 +633,6 @@
             if (screenId === 'screen-upgrades') renderCards();
         };
 
-        // Переключение подкатегорий карточек (Markets, Team, Legal)
         window.switchCategory = function(catId, element) {
             document.querySelectorAll('.category-block').forEach(b => b.style.display = 'none');
             document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
@@ -621,36 +640,59 @@
             element.classList.add('active');
         };
 
-        // Логика промокодов и админки
+        // АКТИВАЦИЯ КОДОВ (ОБЫЧНЫХ И КАСТОМНЫХ АДМИНСКИХ)
         window.usePromoCode = function() {
-            let code = document.getElementById('promo-field').value.trim();
-            if (code === 'ADMIN1337') {
-                document.getElementById('admin-zone').style.display = 'block';
-                alert('Доступ разработчика активирован!');
-            } else if (code === 'FENIX2026') {
-                game.balance += 50000;
+            let code = document.getElementById('promo-field').value.trim().toUpperCase();
+            
+            if (code === 'FENIX2026') {
+                game.balance += 500000;
                 save(); updateUI();
-                alert('Промокод принят: +50,000 монет!');
+                alert('Промокод принят: +500,000 маней!');
+                document.getElementById('promo-field').value = '';
+                return;
+            }
+
+            // Проверка созданных админом промокодов
+            if (game.customPromos && game.customPromos[code]) {
+                let reward = game.customPromos[code];
+                game.balance += reward;
+                delete game.customPromos[code]; // Одноразовый код
+                save(); updateUI();
+                alert(`Успешно! Активирован промокод создателя на +${reward.toLocaleString()} маней!`);
             } else {
-                alert('Неверный код!');
+                alert('Код не существует или уже использован!');
             }
             document.getElementById('promo-field').value = '';
         };
 
-        // Функции панели администратора
-        window.adminGiveMoney = function() { game.balance += 1000000; save(); updateUI(); };
-        window.adminGivePPH = function() { game.pph += 50000; save(); updateUI(); };
-        window.adminResetAll = function() { localStorage.removeItem('f_combat_v2'); location.reload(); };
+        // ФУНКЦИИ АДМИНИСТРАТОРА (ID 810823857)
+        window.adminGiveMoney = function(amount) { game.balance += amount; save(); updateUI(); };
+        window.adminGivePPH = function(amount) { game.pph += amount; save(); updateUI(); };
+        window.adminResetAll = function() { localStorage.removeItem('f_combat_v5_ultimate'); location.reload(); };
+        
+        window.adminCreatePromo = function() {
+            let name = document.getElementById('adm-promo-name').value.trim().toUpperCase();
+            let reward = parseInt(document.getElementById('adm-promo-reward').value);
 
-        // Игровые таймеры (Пассивный доход и восстановление энергии)
+            if (name && reward > 0) {
+                if (!game.customPromos) game.customPromos = {};
+                game.customPromos[name] = reward;
+                save();
+                alert(`Промокод "${name}" на сумму ${reward} успешно создан! Передай его игрокам.`);
+                document.getElementById('adm-promo-name').value = '';
+                document.getElementById('adm-promo-reward').value = '';
+            } else {
+                alert('Заполни все поля корректно!');
+            }
+        };
+
         setInterval(() => {
-            // Пассивный доход в секунду
             if (game.pph > 0) {
                 game.balance += (game.pph / 3600);
             }
-            // Регенерация энергии (+3 в сек)
             if (game.energy < game.maxEnergy) {
-                game.energy = Math.min(game.maxEnergy, game.energy + 3);
+                let regen = 5 + Math.floor(game.pph / 100000);
+                game.energy = Math.min(game.maxEnergy, game.energy + regen);
             }
             updateUI();
             save();
