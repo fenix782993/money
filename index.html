@@ -15,6 +15,51 @@
             --text-muted: #9c8273;
             --lock-color: #ff3b30;
             --success-color: #00ff66;
+            
+            /* Динамические переменные скинов */
+            --skin-glow: rgba(255, 85, 0, 0.5);
+            --skin-circle-bg: radial-gradient(circle, #421b06 0%, #0d0704 100%);
+            --skin-border: #54290c;
+        }
+
+        /* 👑 ТЕМЫ ДЛЯ СКИНОВ ФЕНИКСА */
+        body.skin-neon {
+            --bg-color: #09050f;
+            --panel-bg: #160c24;
+            --border-color: #381852;
+            --accent-orange: #b026ff;
+            --neon-gold: #00ffff;
+            --skin-glow: rgba(176, 38, 255, 0.6);
+            --skin-circle-bg: radial-gradient(circle, #25093b 0%, #09050f 100%);
+            --skin-border: #4d157a;
+        }
+
+        body.skin-shadow {
+            --bg-color: #050505;
+            --panel-bg: #121212;
+            --border-color: #262626;
+            --accent-orange: #4a00e0;
+            --neon-gold: #8e2de2;
+            --skin-glow: rgba(142, 45, 226, 0.5);
+            --skin-circle-bg: radial-gradient(circle, #1a0033 0%, #050505 100%);
+            --skin-border: #333333;
+        }
+
+        body.skin-magma {
+            --bg-color: #0f0300;
+            --panel-bg: #240700;
+            --border-color: #541100;
+            --accent-orange: #ff2200;
+            --neon-gold: #ffaa00;
+            --skin-glow: rgba(255, 34, 0, 0.8);
+            --skin-circle-bg: radial-gradient(circle, #5e0b00 0%, #0f0300 100%);
+            --skin-border: #801b00;
+            animation: magma-burn 6s infinite alternate;
+        }
+
+        @keyframes magma-burn {
+            0% { box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.2); }
+            100% { box-shadow: inset 0 0 50px rgba(255, 85, 0, 0.4); }
         }
 
         * {
@@ -33,16 +78,16 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
+            transition: background 0.3s ease;
         }
 
         .top-bar {
-            background: linear-gradient(180deg, #2b150a 0%, var(--bg-color) 100%);
+            background: linear-gradient(180deg, rgba(255,85,0,0.05) 0%, var(--bg-color) 100%);
             padding: 14px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--border-color);
-            box-shadow: 0 4px 20px rgba(255, 85, 0, 0.15);
         }
 
         .league-badge {
@@ -55,7 +100,6 @@
             color: var(--neon-gold);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            box-shadow: 0 0 10px rgba(255, 85, 0, 0.3);
         }
 
         .stats-container {
@@ -71,7 +115,6 @@
             font-size: 13px;
             font-weight: bold;
             color: #ffffff;
-            text-shadow: 0 0 5px rgba(255,255,255,0.2);
         }
 
         .stat-box .lbl {
@@ -118,7 +161,35 @@
             background: linear-gradient(180deg, #ffffff 0%, var(--neon-gold) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px rgba(255,85,0,0.4));
+        }
+
+        /* 🎲 СЕКЦИЯ DAILY COMBO */
+        .combo-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 14px;
+        }
+        .combo-slot {
+            width: 50px;
+            height: 50px;
+            background: #0d0704;
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            position: relative;
+        }
+        .combo-slot.guessed {
+            border-style: solid;
+            border-color: var(--success-color);
+            background: rgba(0, 255, 102, 0.1);
         }
 
         .circle-wrapper {
@@ -132,28 +203,25 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: radial-gradient(circle, #421b06 0%, #0d0704 100%);
-            border: 4px solid #54290c;
-            box-shadow: 0 0 45px rgba(255, 85, 0, 0.5), inset 0 0 25px rgba(255, 204, 0, 0.2);
+            background: var(--skin-circle-bg);
+            border: 4px solid var(--skin-border);
+            box-shadow: 0 0 45px var(--skin-glow);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: transform 0.05s ease;
+            transition: transform 0.05s ease, border-color 0.2s;
             overflow: hidden;
         }
 
         .click-circle:active {
             transform: scale(0.94);
-            border-color: var(--neon-gold);
-            box-shadow: 0 0 60px rgba(255, 204, 0, 0.6);
         }
 
         .click-circle img {
             width: 85%;
             height: 85%;
             object-fit: contain;
-            filter: drop-shadow(0 0 25px rgba(255,85,0,0.7));
             animation: pulse 3s infinite ease-in-out;
         }
 
@@ -171,7 +239,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         .energy-text {
@@ -192,7 +259,6 @@
             height: 100%;
             width: 100%;
             background: linear-gradient(90deg, var(--accent-orange), var(--neon-gold));
-            box-shadow: 0 0 8px var(--accent-orange);
         }
 
         .sub-tabs {
@@ -210,14 +276,12 @@
             border-radius: 12px;
             font-size: 12px;
             font-weight: bold;
-            transition: all 0.2s;
         }
 
         .sub-tab-btn.active {
             background: linear-gradient(135deg, var(--accent-orange) 0%, #cc4400 100%);
             color: #fff;
             border-color: var(--neon-gold);
-            box-shadow: 0 4px 12px rgba(255, 85, 0, 0.3);
         }
 
         .cards-grid {
@@ -236,7 +300,6 @@
             flex-direction: column;
             justify-content: space-between;
             position: relative;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
         }
 
         .card.locked {
@@ -264,7 +327,6 @@
             overflow: hidden;
             background: #0d0704;
             margin-bottom: 8px;
-            border: 1px solid rgba(255,255,255,0.05);
         }
 
         .card-img-wrapper img {
@@ -304,7 +366,6 @@
             font-size: 12px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
         }
 
         .card-buy-btn:disabled {
@@ -320,7 +381,70 @@
             border-radius: 18px;
             padding: 16px;
             margin-bottom: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        /* 🏆 СТИЛИ ЛИДЕРБОРДА */
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 380px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        .leader-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: 12px;
+        }
+        .leader-item.top3 {
+            border-color: var(--neon-gold);
+            background: linear-gradient(90deg, var(--panel-bg) 0%, #2b1d04 100%);
+        }
+        .leader-item.self {
+            border-color: var(--success-color);
+            background: rgba(0, 255, 102, 0.05);
+        }
+        .leader-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .leader-rank {
+            font-weight: 900;
+            color: var(--neon-gold);
+            width: 24px;
+        }
+
+        /* 👑 КАРУСЕЛЬ СКИНОВ */
+        .skins-grid {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 4px 0 14px 0;
+        }
+        .skin-card {
+            min-width: 130px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 12px;
+            text-align: center;
+        }
+        .skin-card.active {
+            border-color: var(--success-color);
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
+        }
+        .skin-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 8px auto;
+            border: 2px solid #fff;
         }
 
         /* АДМИН ПАНЕЛЬ */
@@ -331,7 +455,6 @@
             padding: 16px;
             margin-top: 15px;
             display: none;
-            box-shadow: 0 0 25px rgba(255, 85, 0, 0.35);
         }
 
         .admin-btn {
@@ -345,7 +468,6 @@
             margin-right: 6px;
             margin-bottom: 6px;
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
         }
 
         .admin-card-row {
@@ -433,13 +555,20 @@
 
     <div id="screen-clicker" class="main-content active">
         <div class="score-container">
-            <div class="score-title">БАЛАНС МАНЕЙ</div>
+            <div class="score-title">БАЛАНС МОНЕТ</div>
             <div class="score-val" id="display-balance">0</div>
+        </div>
+
+        <div style="font-size: 10px; color: var(--text-muted); font-weight: bold; margin-top:5px;">DAILY COMBO НАГРАДА: +5,000,000</div>
+        <div class="combo-container" id="combo-display">
+            <div class="combo-slot" id="combo-0">?</div>
+            <div class="combo-slot" id="combo-1">?</div>
+            <div class="combo-slot" id="combo-2">?</div>
         </div>
 
         <div class="circle-wrapper">
             <div class="click-circle" id="main-tap-target">
-                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80" alt="Fenix">
+                <img id="fenix-avatar" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80" alt="Fenix">
             </div>
         </div>
 
@@ -472,7 +601,20 @@
         </div>
     </div>
 
+    <div id="screen-leaderboard" class="main-content">
+        <div class="profile-card" style="text-align: center;">
+            <h2 style="color: var(--neon-gold); margin-bottom: 4px;">🏆 АРЕНА ЛИДЕРОВ</h2>
+            <p style="font-size: 12px; color: var(--text-muted)">Рейтинг ТОП-500 лучших игроков в реальном времени</p>
+        </div>
+        <div class="leaderboard-list" id="leaderboard-container"></div>
+    </div>
+
     <div id="screen-profile" class="main-content">
+        <div class="profile-card">
+            <h3 style="margin-bottom: 10px; color: var(--neon-gold)">👑 ГАРДЕРОБ ФЕНИКСА</h3>
+            <div class="skins-grid" id="skins-container"></div>
+        </div>
+
         <div class="profile-card">
             <h3 style="margin-bottom: 6px; color: var(--neon-gold)">CEO Панель управления</h3>
             <p style="font-size: 13px;">Ранг аккаунта: <span style="color:#fff; font-weight:bold;">Бессмертный Феникс</span></p>
@@ -521,6 +663,10 @@
             <div class="nav-btn-icon">⛏️</div>
             <div>Mine</div>
         </div>
+        <div class="nav-btn" onclick="navigate('screen-leaderboard', this)">
+            <div class="nav-btn-icon">🏆</div>
+            <div>Leaderboard</div>
+        </div>
         <div class="nav-btn" onclick="navigate('screen-profile', this)">
             <div class="nav-btn-icon">👤</div>
             <div>Profile</div>
@@ -533,6 +679,7 @@
             tg.expand();
         }
 
+        // Загрузка или инициализация расширенной структуры игрока
         let game = JSON.parse(localStorage.getItem('f_combat_v6_pro')) || {
             balance: 0,
             pph: 0,
@@ -540,8 +687,23 @@
             energy: 3000,
             maxEnergy: 3000,
             cards: {},
-            customPromos: {}
+            customPromos: {},
+            activeSkin: 'default',
+            unlockedSkins: ['default'],
+            comboHistory: [] // Хранит id карт, собранных за сегодня
         };
+
+        // Данные обо всех доступных скинах
+        const SKINS_DATA = [
+            { id: 'default', name: 'Стандарт', cost: 0, color: '#421b06', img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=150&q=80' },
+            { id: 'neon', name: 'Кибернетик', cost: 15000000, color: '#25093b', img: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=150&q=80' },
+            { id: 'shadow', name: 'Тень Бездны', cost: 75000000, color: '#1a0033', img: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=150&q=80' },
+            { id: 'magma', name: 'Лорд Магмы', cost: 500000000, color: '#5e0b00', img: 'https://images.unsplash.com/photo-1608962776856-42d71b3e7ec7?auto=format&fit=crop&w=150&q=80' }
+        ];
+
+        // Фиксированное комбо дня на сегодня (например, BTC Pairs, Fenix Channel, Global KYC)
+        const DAILY_COMBO = ['m_btc', 't_tg', 'l_kyc'];
+        const COMBO_REWARD = 5000000;
 
         const CARDS_DATA = [
             { id: 'm_btc', name: 'BTC Pairs', basePrice: 1000, baseProfit: 90, energyBonus: 100, clickBonus: 1, cat: 'markets', reqCard: null, reqLvl: 0, img: 'https://images.unsplash.com/photo-1621416894569-0f39ed31d247?auto=format&fit=crop&w=150&q=80' },
@@ -574,11 +736,21 @@
             localStorage.setItem('f_combat_v6_pro', JSON.stringify(game));
         }
 
+        // Рендеринг и обновление темы активного скина
+        function applySkinTheme() {
+            document.body.className = ''; 
+            if (game.activeSkin !== 'default') {
+                document.body.classList.add(`skin-${game.activeSkin}`);
+            }
+            const activeSkinData = SKINS_DATA.find(s => s.id === game.activeSkin);
+            document.getElementById('fenix-avatar').src = activeSkinData.img;
+        }
+
         function updateUI() {
             document.getElementById('display-balance').innerText = Math.floor(game.balance).toLocaleString();
             document.getElementById('top-mult').innerText = '+' + game.mult;
             document.getElementById('top-pph').innerText = '+' + game.pph.toLocaleString();
-            document.getElementById('current-energy').innerText = Math.fluid ? Math.floor(game.energy) : Math.floor(game.energy);
+            document.getElementById('current-energy').innerText = Math.floor(game.energy);
             document.getElementById('max-energy').innerText = game.maxEnergy;
             
             let fillPct = (game.energy / game.maxEnergy) * 100;
@@ -587,6 +759,22 @@
             let tInfo = getTitleInfo(game.balance);
             document.getElementById('player-league').innerText = tInfo.text;
             document.getElementById('profile-title-num').innerText = tInfo.lvl + " / 250";
+
+            updateComboDisplay();
+        }
+
+        // Обновление слотов ежедневного комбо
+        function updateComboDisplay() {
+            for (let i = 0; i < 3; i++) {
+                const slot = document.getElementById(`combo-${i}`);
+                if (game.comboHistory && game.comboHistory[i]) {
+                    slot.innerText = "🔥";
+                    slot.classList.add('guessed');
+                } else {
+                    slot.innerText = "?";
+                    slot.classList.remove('guessed');
+                }
+            }
         }
 
         function renderCards() {
@@ -638,6 +826,121 @@
             });
         }
 
+        // 🏆 ИМИТАЦИЯ ГЕНЕРАЦИИ 500+ ЛИДЕРОВ (БЫСТРЫЙ И СКАНИРУЕМЫЙ СПИСОК)
+        function renderLeaderboard() {
+            const container = document.getElementById('leaderboard-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            // Генерируем псевдо-ботов для заполнения таблицы лидеров
+            let leaders = [];
+            for (let i = 1; i <= 500; i++) {
+                let botBalance = Math.floor(1000000000 / Math.pow(i, 0.6));
+                leaders.push({
+                    rank: i,
+                    name: `FenixMaster_${i}`,
+                    balance: botBalance,
+                    isSelf: false
+                });
+            }
+
+            // Вставляем текущего реального игрока на корректное место
+            let selfRank = 501;
+            for (let i = 0; i < leaders.length; i++) {
+                if (game.balance > leaders[i].balance) {
+                    selfRank = i + 1;
+                    break;
+                }
+            }
+
+            const selfPlayer = { rank: selfRank, name: "Вы (Будущий Кит)", balance: game.balance, isSelf: true };
+            
+            if (selfRank <= 500) {
+                leaders.splice(selfRank - 1, 0, selfPlayer);
+                leaders.pop(); // Сохраняем лимит в 500 мест
+            }
+
+            // Ограничиваем отрисовку первыми 60 элементами для оптимизации UI + плашка игрока
+            let viewLimit = Math.min(leaders.length, 60);
+            
+            // Если игрок далеко внизу, принудительно выводим его в конец списка
+            let htmlContent = '';
+            for (let i = 0; i < viewLimit; i++) {
+                let item = leaders[i];
+                let itemClass = item.isSelf ? 'leader-item self' : (item.rank <= 3 ? 'leader-item top3' : 'leader-item');
+                let crown = item.rank === 1 ? '🥇 ' : (item.rank === 2 ? '🥈 ' : (item.rank === 3 ? '🥉 ' : ''));
+                
+                htmlContent += `
+                    <div class="${itemClass}">
+                        <div class="leader-left">
+                            <span class="leader-rank">${crown ? '' : '#'}${item.rank}</span>
+                            <span style="font-weight: bold; ${item.isSelf ? 'color: var(--success-color)' : ''}">${crown}${item.name}</span>
+                        </div>
+                        <div style="font-weight: 800; color: var(--neon-gold)">🪙 ${Math.floor(item.balance).toLocaleString()}</div>
+                    </div>
+                `;
+            }
+
+            if (selfRank > 60) {
+                htmlContent += `
+                    <div style="text-align:center; color: var(--text-muted); font-size:12px; margin: 10px 0;">... пропущено часть игроков ...</div>
+                    <div class="leader-item self">
+                        <div class="leader-left">
+                            <span class="leader-rank">#${selfRank}</span>
+                            <span style="font-weight: bold; color: var(--success-color)">Вы (Будущий Кит)</span>
+                        </div>
+                        <div style="font-weight: 800; color: var(--neon-gold)">🪙 ${Math.floor(game.balance).toLocaleString()}</div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = htmlContent;
+        }
+
+        // 👑 МАГАЗИН И СМЕНА СКИНОВ
+        function renderSkins() {
+            const container = document.getElementById('skins-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            SKINS_DATA.forEach(s => {
+                let isUnlocked = game.unlockedSkins.includes(s.id);
+                let isActive = game.activeSkin === s.id;
+                
+                let btnText = isActive ? 'Экипирован' : (isUnlocked ? 'Выбрать' : `Купить за ${s.cost.toLocaleString()}`);
+                let btnStyle = isActive ? 'background: var(--success-color); color:#000;' : (isUnlocked ? 'background: #3d2214;' : 'background: linear-gradient(135deg, #ff5500, #cc4400);');
+                
+                let skinHtml = `
+                    <div class="skin-card ${isActive ? 'active' : ''}">
+                        <img class="skin-preview" src="${s.img}" alt="${s.name}" style="border-color: ${s.color}">
+                        <div style="font-size: 12px; font-weight:bold; margin-bottom:6px;">${s.name}</div>
+                        <button class="card-buy-btn" style="padding: 6px; font-size:10px; ${btnStyle}" onclick="handleSkinAction('${s.id}', ${s.cost})">${btnText}</button>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', skinHtml);
+            });
+        }
+
+        window.handleSkinAction = function(skinId, cost) {
+            if (game.unlockedSkins.includes(skinId)) {
+                game.activeSkin = skinId;
+                alert('Скин успешно применен!');
+            } else {
+                if (game.balance >= cost) {
+                    game.balance -= cost;
+                    game.unlockedSkins.push(skinId);
+                    game.activeSkin = skinId;
+                    alert('👑 Великолепно! Новый скин разблокирован и экипирован.');
+                } else {
+                    alert('Недостаточно монет для покупки этого облика!');
+                }
+            }
+            save();
+            applySkinTheme();
+            updateUI();
+            renderSkins();
+        };
+
         function renderAdminCardsList() {
             const container = document.getElementById('admin-cards-list');
             if(!container) return;
@@ -665,6 +968,17 @@
                 game.pph += profitAdd;
                 game.maxEnergy += energyAdd;
                 game.mult += clickAdd;
+
+                // Проверка логики Daily Combo
+                if (DAILY_COMBO.includes(id) && !game.comboHistory.includes(id)) {
+                    game.comboHistory.push(id);
+                    alert('🔥 Вы нашли карту из Daily Combo!');
+                    if (game.comboHistory.length === 3) {
+                        game.balance += COMBO_REWARD;
+                        alert(`🎉 Поздравляем! Вы собрали комбо дня и получили +${COMBO_REWARD.toLocaleString()} монет!`);
+                    }
+                }
+
                 save();
                 updateUI();
                 renderCards();
@@ -685,9 +999,14 @@
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
             element.classList.add('active');
+            
             if (screenId === 'screen-upgrades') renderCards();
-            if (screenId === 'screen-profile' && document.getElementById('admin-zone').style.display === 'block') {
-                renderAdminCardsList();
+            if (screenId === 'screen-leaderboard') renderLeaderboard();
+            if (screenId === 'screen-profile') {
+                renderSkins();
+                if (document.getElementById('admin-zone').style.display === 'block') {
+                    renderAdminCardsList();
+                }
             }
         };
 
@@ -698,7 +1017,6 @@
             element.classList.add('active');
         };
 
-        // ПРОМОКОДЫ И АДМИНКА
         window.usePromoCode = function() {
             let code = document.getElementById('promo-field').value.trim();
             
@@ -714,7 +1032,7 @@
             if(game.customPromos && game.customPromos[upperCode]) {
                 let reward = game.customPromos[upperCode];
                 game.balance += reward;
-                delete game.customPromos[upperCode]; // Одноразовый
+                delete game.customPromos[upperCode]; 
                 alert(`Промокод активирован! Получено: +${reward.toLocaleString()} монет!`);
                 document.getElementById('promo-field').value = '';
                 save();
@@ -769,7 +1087,6 @@
                 game.cards[cardId] = (game.cards[cardId] || 0) + targetLvl;
             }
             
-            // Пересчитываем характеристики на основе уровней карт
             let totalPPH = 0;
             let totalEnergy = 3000;
             let totalMult = 1;
@@ -793,25 +1110,21 @@
             renderAdminCardsList();
         };
 
-        // Пассивный доход в секунду и регенерация энергии
+        // Пассивный доход и восстановление энергии
         setInterval(() => {
-            // Доход в час делим на 3600 секунд
             if (game.pph > 0) {
                 game.balance += (game.pph / 3600);
             }
-            
-            // Восстановление энергии (+3 в секунду)
             if (game.energy < game.maxEnergy) {
                 game.energy = Math.min(game.maxEnergy, game.energy + 3);
             }
-            
             updateUI();
         }, 1000);
 
-        // Автосохранение раз в 10 секунд
         setInterval(save, 10000);
 
-        // Инициализация интерфейса при старте
+        // Старт системы
+        applySkinTheme();
         updateUI();
     </script>
 </body>
