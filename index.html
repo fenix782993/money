@@ -1,1046 +1,1200 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fenix Combat Ultra Pro</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        :root {
-            --bg-color: #0d0704;
-            --panel-bg: #1c100b;
-            --border-color: #3d2214;
-            --accent-orange: #ff5500;
-            --neon-gold: #ffcc00;
-            --text-muted: #9c8273;
-            --lock-color: #ff3b30;
-            --success-color: #00ff66;
-            
-            /* Динамические переменные скинов */
-            --skin-glow: rgba(255, 85, 0, 0.5);
-            --skin-circle-bg: radial-gradient(circle, #421b06 0%, #0d0704 100%);
-            --skin-border: #54290c;
-        }
 
-        /* 👑 ТЕМЫ ДЛЯ СКИНОВ ФЕНИКСА */
-        body.skin-neon {
-            --bg-color: #09050f;
-            --panel-bg: #160c24;
-            --border-color: #381852;
-            --accent-orange: #b026ff;
-            --neon-gold: #00ffff;
-            --skin-glow: rgba(176, 38, 255, 0.6);
-            --skin-circle-bg: radial-gradient(circle, #25093b 0%, #09050f 100%);
-            --skin-border: #4d157a;
-        }
+<meta charset="UTF-8">
 
-        body.skin-shadow {
-            --bg-color: #050505;
-            --panel-bg: #121212;
-            --border-color: #262626;
-            --accent-orange: #4a00e0;
-            --neon-gold: #8e2de2;
-            --skin-glow: rgba(142, 45, 226, 0.5);
-            --skin-circle-bg: radial-gradient(circle, #1a0033 0%, #050505 100%);
-            --skin-border: #333333;
-        }
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no">
 
-        body.skin-magma {
-            --bg-color: #0f0300;
-            --panel-bg: #240700;
-            --border-color: #541100;
-            --accent-orange: #ff2200;
-            --neon-gold: #ffaa00;
-            --skin-glow: rgba(255, 34, 0, 0.8);
-            --skin-circle-bg: radial-gradient(circle, #5e0b00 0%, #0f0300 100%);
-            --skin-border: #801b00;
-            animation: magma-burn 6s infinite alternate;
-        }
+<title>🔥 Fenix Combat</title>
 
-        @keyframes magma-burn {
-            0% { box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.2); }
-            100% { box-shadow: inset 0 0 50px rgba(255, 85, 0, 0.4); }
-        }
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-        * {
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-user-select: none;
-            margin: 0;
-            padding: 0;
-        }
+<link rel="stylesheet" href="style.css">
 
-        body {
-            background-color: var(--bg-color);
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            transition: background 0.3s ease;
-        }
-
-        /* ОВЕРЛЕЙ ОШИБКИ ПОДПИСКИ */
-        #gate-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #0d0704;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            text-align: center;
-        }
-        .gate-card {
-            background: #1c100b;
-            border: 2px solid var(--accent-orange);
-            padding: 30px 20px;
-            border-radius: 24px;
-            box-shadow: 0 0 30px rgba(255,85,0,0.2);
-            max-width: 90%;
-        }
-        .gate-btn {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            margin-top: 14px;
-            border-radius: 12px;
-            font-weight: bold;
-            text-decoration: none;
-            text-align: center;
-            cursor: pointer;
-            border: none;
-        }
-        .gate-btn-join {
-            background: linear-gradient(135deg, var(--accent-orange), #ff7700);
-            color: #fff;
-            animation: pulse-btn 2s infinite ease-in-out;
-        }
-        .gate-btn-check {
-            background: #3d2214;
-            color: var(--neon-gold);
-            border: 1px solid var(--border-color);
-        }
-        @keyframes pulse-btn {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.03); }
-            100% { transform: scale(1); }
-        }
-
-        .top-bar {
-            background: linear-gradient(180deg, rgba(255,85,0,0.05) 0%, var(--bg-color) 100%);
-            padding: 14px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        .league-badge {
-            background: rgba(255, 85, 0, 0.15);
-            border: 1px solid var(--accent-orange);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--neon-gold);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .stats-container {
-            display: flex;
-            gap: 14px;
-        }
-
-        .stat-box {
-            text-align: right;
-        }
-
-        .stat-box .val {
-            font-size: 13px;
-            font-weight: bold;
-            color: #ffffff;
-        }
-
-        .stat-box .lbl {
-            font-size: 9px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            display: none;
-        }
-
-        .main-content.active {
-            display: block;
-        }
-
-        #screen-clicker {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: calc(100vh - 150px);
-        }
-
-        .score-container {
-            margin-top: 10px;
-        }
-
-        .score-title {
-            font-size: 11px;
-            color: var(--text-muted);
-            letter-spacing: 2px;
-            font-weight: bold;
-        }
-
-        .score-val {
-            font-size: 46px;
-            font-weight: 900;
-            margin-top: 4px;
-            background: linear-gradient(180deg, #ffffff 0%, var(--neon-gold) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* 🎲 СЕКЦИЯ DAILY COMBO */
-        .combo-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 10px 0;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            border-radius: 14px;
-        }
-        .combo-slot {
-            width: 50px;
-            height: 50px;
-            background: #0d0704;
-            border: 2px dashed var(--border-color);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        .combo-slot.guessed {
-            border-style: solid;
-            border-color: var(--success-color);
-            background: rgba(0, 255, 102, 0.1);
-            transform: scale(1.05);
-            box-shadow: 0 0 10px var(--success-color);
-        }
-
-        .circle-wrapper {
-            margin: auto;
-            position: relative;
-            width: 230px;
-            height: 230px;
-        }
-
-        .click-circle {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: var(--skin-circle-bg);
-            border: 4px solid var(--skin-border);
-            box-shadow: 0 0 45px var(--skin-glow);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: transform 0.05s ease, border-color 0.2s;
-            overflow: hidden;
-        }
-
-        .click-circle:active {
-            transform: scale(0.94);
-        }
-
-        .click-circle img {
-            width: 85%;
-            height: 85%;
-            object-fit: contain;
-            animation: pulse 3s infinite ease-in-out;
-        }
-
-        /* Всплывающие цифры тапа */
-        .floating-text {
-            position: absolute;
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--neon-gold);
-            pointer-events: none;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-            animation: floatUp 0.6s ease-out forwards;
-            z-index: 100;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-80px) scale(0.8); opacity: 0; }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.03); }
-            100% { transform: scale(1); }
-        }
-
-        .energy-container {
-            background: linear-gradient(135deg, var(--panel-bg) 0%, #26150d 100%);
-            border: 1px solid var(--border-color);
-            padding: 14px 16px;
-            border-radius: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .energy-text {
-            font-size: 13px;
-            font-weight: 800;
-        }
-
-        .energy-bar {
-            width: 120px;
-            height: 8px;
-            background: #24130a;
-            border-radius: 6px;
-            overflow: hidden;
-            border: 1px solid #361c0e;
-        }
-
-        .energy-fill {
-            height: 100%;
-            width: 100%;
-            background: linear-gradient(90deg, var(--accent-orange), var(--neon-gold));
-            transition: width 0.1s linear;
-        }
-
-        .sub-tabs {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 16px;
-        }
-
-        .sub-tab-btn {
-            flex: 1;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .sub-tab-btn.active {
-            background: linear-gradient(135deg, var(--accent-orange) 0%, #cc4400 100%);
-            color: #fff;
-            border-color: var(--neon-gold);
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            padding-bottom: 40px;
-        }
-
-        .card {
-            background: linear-gradient(180deg, var(--panel-bg) 0%, #140b07 100%);
-            border: 1px solid var(--border-color);
-            border-radius: 18px;
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-        }
-
-        .card.locked {
-            border-color: var(--lock-color);
-            background: #260d0f;
-        }
-
-        .card-lvl {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 10px;
-            background: rgba(61, 34, 20, 0.8);
-            border: 1px solid var(--border-color);
-            padding: 3px 7px;
-            border-radius: 8px;
-            color: var(--neon-gold);
-            font-weight: bold;
-        }
-
-        .card-img-wrapper {
-            width: 100%;
-            height: 75px;
-            border-radius: 10px;
-            overflow: hidden;
-            background: #0d0704;
-            margin-bottom: 8px;
-        }
-
-        .card-img-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .card-name {
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 4px;
-            color: #fff;
-        }
-
-        .card-desc {
-            font-size: 10px;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-            line-height: 1.3;
-        }
-
-        .card-profit-val {
-            font-size: 12px;
-            color: var(--success-color);
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .card-buy-btn {
-            width: 100%;
-            background: linear-gradient(180deg, #3d2214 0%, #29160d 100%);
-            border: 1px solid #542f1b;
-            color: #fff;
-            padding: 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .card-buy-btn:disabled {
-            background: #1c0a0b;
-            border-color: #3d1416;
-            color: var(--lock-color);
-            cursor: not-allowed;
-        }
-
-        .profile-card {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 18px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-
-        /* 🏆 СТИЛИ ЛИДЕРБОРДА */
-        .leaderboard-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-height: 380px;
-            overflow-y: auto;
-            margin-top: 10px;
-        }
-        .leader-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            padding: 10px 14px;
-            border-radius: 12px;
-        }
-        .leader-item.top3 {
-            border-color: var(--neon-gold);
-            background: linear-gradient(90deg, var(--panel-bg) 0%, #2b1d04 100%);
-        }
-        .leader-item.self {
-            border-color: var(--success-color);
-            background: rgba(0, 255, 102, 0.05);
-        }
-        .leader-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .leader-rank {
-            font-weight: 900;
-            color: var(--neon-gold);
-            width: 24px;
-        }
-
-        /* 👑 КАРУСЕЛЬ СКИНОВ */
-        .skins-grid {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding: 4px 0 14px 0;
-        }
-        .skin-card {
-            min-width: 130px;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-        }
-        .skin-card.active {
-            border-color: var(--success-color);
-            box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
-        }
-        .skin-preview {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin: 0 auto 8px auto;
-            border: 2px solid #fff;
-            object-fit: cover;
-        }
-
-        /* АДМИН ПАНЕЛЬ */
-        .admin-panel {
-            background: #2b0c0c;
-            border: 2px solid var(--accent-orange);
-            border-radius: 18px;
-            padding: 16px;
-            margin-top: 15px;
-            display: none;
-        }
-
-        .admin-btn {
-            background: linear-gradient(135deg, var(--accent-orange) 0%, #cc4400 100%);
-            color: white;
-            border: none;
-            padding: 10px 12px;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 11px;
-            margin-right: 6px;
-            margin-bottom: 6px;
-            cursor: pointer;
-        }
-
-        .nav-menu {
-            background: #0d0704;
-            border-top: 2px solid var(--border-color);
-            display: flex;
-            height: 68px;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        .nav-btn {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            font-size: 11px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .nav-btn.active {
-            color: var(--neon-gold);
-            background: linear-gradient(180deg, rgba(255,85,0,0.04) 0%, rgba(0,0,0,0) 100%);
-        }
-
-        .nav-btn-icon {
-            font-size: 19px;
-            margin-bottom: 2px;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .input-field {
-            flex: 1;
-            background: #0d0704;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 12px;
-            color: #fff;
-            outline: none;
-        }
-
-        .action-btn {
-            background: linear-gradient(135deg, var(--accent-orange) 0%, #cc4400 100%);
-            border: none;
-            color: white;
-            padding: 12px 18px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-    </style>
 </head>
+
 <body>
 
-    <div id="gate-screen">
-        <div class="gate-card">
-            <h2 style="color: var(--neon-gold); margin-bottom: 10px;">🔥 ВХОД ЗАБЛОКИРОВАН</h2>
-            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">
-                Чтобы активировать профиль <span style="color:#fff">Fenix Combat</span>, обязательна подписка на канал создателя.
-            </p>
-            <a href="https://t.me/qfenixqa" target="_blank" class="gate-btn gate-btn-join" onclick="markSubscribed()">1. Подписаться @qfenixqa</a>
-            <button class="gate-btn gate-btn-check" onclick="checkSubscription()">2. Проверить подписку</button>
-        </div>
+<div id="loader">
+
+<div class="loaderLogo">
+
+<img src="assets/ui/logo.png">
+
+</div>
+
+<div class="loaderText">
+
+FENIX COMBAT
+
+</div>
+
+</div>
+
+<div id="subscribeScreen">
+
+<div class="subCard">
+
+<img
+class="subLogo"
+src="assets/ui/logo.png">
+
+<h2>
+
+🔥 Добро пожаловать
+
+</h2>
+
+<p>
+
+Для продолжения необходимо подписаться
+на официальный канал проекта.
+
+</p>
+
+<button id="joinChannel">
+
+📢 @qfenixqa
+
+</button>
+
+<button id="checkSub">
+
+✅ Проверить подписку
+
+</button>
+
+</div>
+
+</div>
+
+<div id="game">
+
+<header class="topBar">
+
+<div class="profileMini">
+
+<img
+id="topAvatar"
+src="assets/phoenix/level1.png">
+
+<div>
+
+<div id="nickname">
+
+Fenix
+
+</div>
+
+<div class="levelText">
+
+LEVEL
+
+<span id="level">
+
+1
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="coinsBox">
+
+<div class="coinsTitle">
+
+PHOENIX COINS
+
+</div>
+
+<div
+id="coins">
+
+0
+
+</div>
+
+</div>
+
+</header>
+
+<section
+id="screen-main"
+class="screen active">
+
+<div class="balanceBox">
+
+<div class="balanceLabel">
+
+ТВОЙ БАЛАНС
+
+</div>
+
+<div
+id="balance">
+
+0
+
+</div>
+
+</div>
+
+<div class="energyBox">
+
+<div class="energyHeader">
+
+⚡
+
+<span id="energy">
+
+3000
+
+</span>
+
+/
+
+<span id="maxEnergy">
+
+3000
+
+</span>
+
+</div>
+
+<div class="energyBar">
+
+<div
+id="energyFill">
+
+</div>
+
+</div>
+
+<div
+id="energyTimer">
+
+Полная энергия
+
+</div>
+
+</div>
+
+<div class="phoenixWrapper">
+
+<div
+id="tapButton"
+class="phoenixCircle">
+
+<img
+id="phoenixImage"
+src="assets/phoenix/level1.png">
+
+</div>
+
+</div>
+
+<div class="tapStats">
+
+<div class="statCard">
+
+<div class="statValue">
+
++
+
+<span id="tapPower">
+
+1
+
+</span>
+
+</div>
+
+<div class="statLabel">
+
+За тап
+
+</div>
+
+</div>
+
+<div class="statCard">
+
+<div class="statValue">
+
++
+
+<span id="income">
+
+0
+
+</span>
+
+</div>
+
+<div class="statLabel">
+
+В час
+
+</div>
+
+</div>
+
+</div>
+
+<div class="boostPanel">
+
+<button
+id="boostEnergy"
+class="boost">
+
+⚡
+
+<div>
+
+Energy
+
+</div>
+
+</button>
+
+<button
+id="boostTap"
+class="boost">
+
+🔥
+
+<div>
+
+Tap
+
+</div>
+
+</button>
+
+<button
+id="boostRecharge"
+class="boost">
+
+♻
+
+<div>
+
+Recharge
+
+</div>
+
+</button>
+
+<button
+id="boostFull"
+class="boost">
+
+❤️
+
+<div>
+
+Full
+
+</div>
+
+</button>
+
+</div>
+
+<div class="dailyCombo">
+
+<h3>
+
+🔥 DAILY COMBO
+
+</h3>
+
+<div
+id="comboCards">
+
+</div>
+
+</div>
+
+</section>
+<!-- ========================= -->
+<!-- MINE -->
+<!-- ========================= -->
+
+<section
+id="screen-mine"
+class="screen">
+
+<div class="pageHeader">
+
+<h2>
+
+⛏ Mine
+
+</h2>
+
+<div class="pageSub">
+
+Покупай карточки и увеличивай доход
+
+</div>
+
+</div>
+
+<div class="incomeCard">
+
+<div>
+
+Доход в час
+
+</div>
+
+<div
+id="pph">
+
+0
+
+</div>
+
+</div>
+
+<div class="mineTabs">
+
+<button
+class="mineTab active"
+data-tab="market">
+
+Market
+
+</button>
+
+<button
+class="mineTab"
+data-tab="legal">
+
+Legal
+
+</button>
+
+<button
+class="mineTab"
+data-tab="pr">
+
+PR
+
+</button>
+
+<button
+class="mineTab"
+data-tab="special">
+
+Special
+
+</button>
+
+</div>
+
+<div class="comboBlock">
+
+<div class="comboTop">
+
+🔥 DAILY COMBO
+
+<span id="comboTimer">
+
+23:59:59
+
+</span>
+
+</div>
+
+<div
+id="comboReward">
+
+Награда:
+5 000 000
+
+</div>
+
+<div
+id="comboContainer">
+
+</div>
+
+</div>
+
+<div class="mineSearch">
+
+<input
+type="text"
+id="cardSearch"
+placeholder="Поиск карточек...">
+
+</div>
+
+<div
+id="cardsContainer"
+class="cardsContainer">
+
+<!-- app.js -->
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- EARN -->
+<!-- ========================= -->
+
+<section
+id="screen-earn"
+class="screen">
+
+<div class="pageHeader">
+
+<h2>
+
+🎁 Earn
+
+</h2>
+
+<div class="pageSub">
+
+Выполняй задания и получай монеты
+
+</div>
+
+</div>
+
+<div class="dailyRewardCard">
+
+<div class="rewardTitle">
+
+Ежедневная награда
+
+</div>
+
+<div
+id="rewardDays">
+
+</div>
+
+<button
+id="claimReward">
+
+Получить
+
+</button>
+
+</div>
+
+<div class="morseCard">
+
+<h3>
+
+📡 Daily Morse
+
+</h3>
+
+<p>
+
+Введите сегодняшнюю азбуку Морзе
+
+</p>
+
+<input
+id="morseInput"
+placeholder=".-- .-.">
+
+<button
+id="checkMorse">
+
+Проверить
+
+</button>
+
+</div>
+
+<div class="tasksBlock">
+
+<h3>
+
+🔥 Задания
+
+</h3>
+
+<div
+id="tasksContainer">
+
+</div>
+
+</div>
+
+</section>
+<!-- ========================= -->
+<!-- FRIENDS -->
+<!-- ========================= -->
+
+<section
+id="screen-friends"
+class="screen">
+
+<div class="pageHeader">
+
+<h2>
+
+👥 Friends
+
+</h2>
+
+<div class="pageSub">
+
+Приглашай друзей и получай бонусы
+
+</div>
+
+</div>
+
+<div class="refCard">
+
+<div class="refTitle">
+
+Твоя реферальная ссылка
+
+</div>
+
+<div class="refBox">
+
+<input
+id="refLink"
+readonly>
+
+<button
+id="copyRef">
+
+COPY
+
+</button>
+
+</div>
+
+</div>
+
+<div class="friendsStats">
+
+<div class="friendItem">
+
+<div class="friendValue"
+id="friendsCount">
+
+0
+
+</div>
+
+<div class="friendLabel">
+
+Друзей
+
+</div>
+
+</div>
+
+<div class="friendItem">
+
+<div class="friendValue"
+id="friendsIncome">
+
+0
+
+</div>
+
+<div class="friendLabel">
+
+Бонус
+
+</div>
+
+</div>
+
+</div>
+
+<div class="bonusCard">
+
+<h3>
+
+🎁 Групповые награды
+
+</h3>
+
+<div id="friendsRewards">
+
+</div>
+
+</div>
+
+<div class="friendsList">
+
+<h3>
+
+Приглашённые игроки
+
+</h3>
+
+<div id="friendsContainer">
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- LEADERBOARD -->
+<!-- ========================= -->
+
+<section
+id="screen-top"
+class="screen">
+
+<div class="pageHeader">
+
+<h2>
+
+🏆 Leaderboard
+
+</h2>
+
+<div class="pageSub">
+
+Лучшие игроки Fenix Combat
+
+</div>
+
+</div>
+
+<div class="leaderFilter">
+
+<button class="leaderBtn active">
+
+Сегодня
+
+</button>
+
+<button class="leaderBtn">
+
+Неделя
+
+</button>
+
+<button class="leaderBtn">
+
+Все
+
+</button>
+
+</div>
+
+<div
+id="leaderboard">
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- PROFILE -->
+<!-- ========================= -->
+
+<section
+id="screen-profile"
+class="screen">
+
+<div class="profileHeader">
+
+<img
+id="profilePhoenix"
+src="assets/phoenix/level1.png">
+
+<div>
+
+<h2
+id="profileName">
+
+Fenix
+
+</h2>
+
+<div
+id="profileLevel">
+
+LVL 1
+
+</div>
+
+<div
+id="phoenixTitle">
+
+Новичок
+
+</div>
+
+</div>
+
+</div>
+
+<div class="profileStats">
+
+<div class="profileStat">
+
+<div id="statCoins">
+
+0
+
+</div>
+
+<span>
+
+Монет
+
+</span>
+
+</div>
+
+<div class="profileStat">
+
+<div id="statPPH">
+
+0
+
+</div>
+
+<span>
+
+В час
+
+</span>
+
+</div>
+
+<div class="profileStat">
+
+<div id="statEnergy">
+
+3000
+
+</div>
+
+<span>
+
+Энергия
+
+</span>
+
+</div>
+
+<div class="profileStat">
+
+<div id="statTaps">
+
+1
+
+</div>
+
+<span>
+
+За тап
+
+</span>
+
+</div>
+
+</div>
+
+<div class="skinsBlock">
+
+<h3>
+
+👕 Гардероб Феникса
+
+</h3>
+
+<div
+id="skinsContainer">
+
+</div>
+
+</div>
+
+<div class="communityBlock">
+
+<button
+id="tgChannel">
+
+📢 Telegram
+
+<br>
+
+@qfenixqa
+
+</button>
+
+<button
+id="supportBtn">
+
+🛠 Техподдержка
+
+<br>
+
+@webfenix
+
+</button>
+
+</div>
+
+<div class="promoBlock">
+
+<h3>
+
+🎁 Промокод
+
+</h3>
+
+<div class="promoBox">
+
+<input
+id="promoInput"
+placeholder="Введите промокод">
+
+<button
+id="promoBtn">
+
+Активировать
+
+</button>
+
+</div>
+
+</div>
+
+<!-- ADMIN PANEL -->
+
+<div
+id="adminPanel"
+class="adminPanel">
+
+<h2>
+
+👑 Панель администратора
+
+</h2>
+
+<div class="adminButtons">
+
+<button id="adminGiveCoins">
+
+💰 Give Coins
+
+</button>
+
+<button id="adminGivePPH">
+
+📈 Give PPH
+
+</button>
+
+<button id="adminBan">
+
+🚫 Ban
+
+</button>
+
+<button id="adminUnban">
+
+✅ Unban
+
+</button>
+
+<button id="adminBroadcast">
+
+📢 Broadcast
+
+</button>
+
+<button id="adminReset">
+
+♻ Reset
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+<!-- ========================================= -->
+<!-- PvP -->
+<!-- ========================================= -->
+
+<section
+id="screen-pvp"
+<section id="screen-pvp" class="screen">
+    <div class="pageHeader">
+        <h2>⚔ PvP Arena</h2>
+        <div class="pageSub">Сражайся с другими игроками</div>
     </div>
-
-    <div class="top-bar">
-        <div class="league-badge" id="player-league">Загрузка...</div>
-        <div class="stats-container">
-            <div class="stat-box">
-                <div class="val" id="top-mult">+1</div>
-                <div class="lbl">За тап</div>
-            </div>
-            <div class="stat-box">
-                <div class="val" id="top-pph">+0</div>
-                <div class="lbl">В час</div>
-            </div>
-        </div>
+    <div class="pvpCard" style="background:var(--panel); padding:18px; border-radius:var(--radius); text-align:center;">
+        <div id="enemyName" style="font-size:18px; font-weight:900; margin-bottom:15px;">Арена готова к бою</div>
+        <input id="pvpBetInput" type="number" placeholder="Введите ставку (мин. 1000)" style="width:100%; padding:12px; border-radius:12px; border:1px solid var(--border); background:#0f1117; color:white; margin-bottom:12px; outline:none;">
+        <button id="startPvPBtn" class="buy-btn">⚔ Найти бой</button>
     </div>
+</section>
+class="screen">
 
-    <div id="screen-clicker" class="main-content active">
-        <div class="score-container">
-            <div class="score-title">БАЛАНС МОНЕТ</div>
-            <div class="score-val" id="display-balance">0</div>
-        </div>
+<div class="pageHeader">
 
-        <div style="font-size: 10px; color: var(--text-muted); font-weight: bold; margin-top:5px;">DAILY COMBO НАГРАДА: +5,000,000</div>
-        <div class="combo-container" id="combo-display">
-            <div class="combo-slot" id="combo-0">?</div>
-            <div class="combo-slot" id="combo-1">?</div>
-            <div class="combo-slot" id="combo-2">?</div>
-        </div>
+<h2>
 
-        <div class="circle-wrapper">
-            <div class="click-circle" id="main-tap-target">
-                <img id="fenix-avatar" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80" alt="Fenix">
-            </div>
-        </div>
+⚔ PvP Arena
 
-        <div class="energy-container">
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <span>🔥</span>
-                <div class="energy-text"><span id="current-energy">3000</span>/<span id="max-energy">3000</span></div>
-            </div>
-            <div class="energy-bar">
-                <div class="energy-fill" id="energy-fill-bar"></div>
-            </div>
-        </div>
-    </div>
+</h2>
 
-    <div id="screen-upgrades" class="main-content">
-        <div class="sub-tabs">
-            <button class="sub-tab-btn active" onclick="switchCategory('cat-markets', this)">Markets</button>
-            <button class="sub-tab-btn" onclick="switchCategory('cat-team', this)">PR&Team</button>
-            <button class="sub-tab-btn" onclick="switchCategory('cat-legal', this)">Legal</button>
-        </div>
+<div class="pageSub">
 
-        <div id="cat-markets" class="category-block">
-            <div class="cards-grid" id="grid-markets"></div>
-        </div>
-        <div id="cat-team" class="category-block" style="display:none;">
-            <div class="cards-grid" id="grid-team"></div>
-        </div>
-        <div id="cat-legal" class="category-block" style="display:none;">
-            <div class="cards-grid" id="grid-legal"></div>
-        </div>
-    </div>
+Сражайся с другими игроками
 
-    <div id="screen-leaderboard" class="main-content">
-        <div class="profile-card" style="text-align: center;">
-            <h2 style="color: var(--neon-gold); margin-bottom: 4px;">🏆 АРЕНА ЛИДЕРОВ</h2>
-            <p style="font-size: 12px; color: var(--text-muted)">Рейтинг ТОП-500 лучших игроков в реальном времени</p>
-        </div>
-        <div class="leaderboard-list" id="leaderboard-container"></div>
-    </div>
+</div>
 
-    <div id="screen-profile" class="main-content">
-        <div class="profile-card">
-            <h3 style="margin-bottom: 10px; color: var(--neon-gold)">👑 ГАРДЕРОБ ФЕНИКСА</h3>
-            <div class="skins-grid" id="skins-container"></div>
-        </div>
+</div>
 
-        <div class="profile-card">
-            <h3 style="margin-bottom: 6px; color: var(--neon-gold)">CEO Панель управления</h3>
-            <p style="font-size: 13px;">Ранг аккаунта: <span style="color:#fff; font-weight:bold;">Бессмертный Феникс</span></p>
-            <p style="font-size: 13px; margin-top: 4px;">Текущий уровень лиги: <span id="profile-title-num" style="color:var(--accent-orange)">1/250</span></p>
-        </div>
+<div class="pvpCard">
 
-        <div class="profile-card">
-            <h3 style="font-size: 14px; margin-bottom: 8px;">Активация секретных кодов</h3>
-            <div class="input-group">
-                <input type="text" id="promo-field" class="input-field" placeholder="Введи промокод или код админа">
-                <button class="action-btn" onclick="usePromoCode()">Ввод</button>
-            </div>
-        </div>
+<div class="enemyAvatar">
 
-        <div class="admin-panel" id="admin-zone">
-            <h3 style="color:var(--neon-gold); margin-bottom:12px; font-size:14px; border-bottom:1px solid #4a1515; padding-bottom:6px;">👑 ПАНЕЛЬ РАЗРАБОТЧИКА</h3>
-            
-            <div style="margin-bottom: 14px;">
-                <button class="admin-btn" onclick="adminGiveMoney(50000000)">+50М Маней</button>
-                <button class="admin-btn" onclick="adminGivePPH(500000)">+500К в час</button>
-                <button class="admin-btn" onclick="adminResetAll()" style="background:#5e1212;">Сброс игры</button>
-            </div>
-        </div>
-    </div>
+<img
+id="enemyAvatar"
+src="assets/ui/enemy.png">
 
-    <div class="nav-menu">
-        <div class="nav-btn active" onclick="navigate('screen-clicker', this)">
-            <div class="nav-btn-icon">🪙</div>
-            <div>Exchange</div>
-        </div>
-        <div class="nav-btn" onclick="navigate('screen-upgrades', this)">
-            <div class="nav-btn-icon">⛏️</div>
-            <div>Mine</div>
-        </div>
-        <div class="nav-btn" onclick="navigate('screen-leaderboard', this)">
-            <div class="nav-btn-icon">🏆</div>
-            <div>Leaderboard</div>
-        </div>
-        <div class="nav-btn" onclick="navigate('screen-profile', this)">
-            <div class="nav-btn-icon">👤</div>
-            <div>Profile</div>
-        </div>
-    </div>
+</div>
 
-    <script>
-        const tg = window.Telegram.WebApp;
-        if(tg) { tg.expand(); }
+<div
+id="enemyName">
 
-        // Состояние подписки локально (имитация работы бэкенда)
-        let isClickedJoin = localStorage.getItem('f_subscribed') === 'true';
+Поиск соперника...
 
-        function markSubscribed() {
-            isClickedJoin = true;
-            localStorage.setItem('f_subscribed', 'true');
-        }
+</div>
 
-        function checkSubscription() {
-            if (isClickedJoin) {
-                document.getElementById('gate-screen').style.display = 'none';
-                if(tg && tg.showAlert) tg.showAlert("Успешно! Доступ к Fenix Combat открыт.");
-            } else {
-                if(tg && tg.showAlert) {
-                    tg.showAlert("Вы не подписались на канал @qfenixqa!");
-                } else {
-                    alert("Вы не подписались на канал @qfenixqa!");
-                }
-            }
-        }
+<div
+id="enemyLevel">
 
-        // Запуск проверки при старте
-        if (isClickedJoin) {
-            document.getElementById('gate-screen').style.display = 'none';
-        }
+LVL 0
 
-        let game = JSON.parse(localStorage.getItem('f_combat_v6_pro')) || {
-            balance: 0, pph: 0, mult: 1, energy: 3000, maxEnergy: 3000,
-            cards: {}, activeSkin: 'default', unlockedSkins: ['default'],
-            comboHistory: [], comboRewardClaimed: false
-        };
+</div>
 
-        const SKINS_DATA = [
-            { id: 'default', name: 'Стандарт', cost: 0, img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=150&q=80' },
-            { id: 'neon', name: 'Кибернетик', cost: 15000000, img: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=150&q=80' },
-            { id: 'shadow', name: 'Тень Бездны', cost: 75000000, img: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=150&q=80' },
-            { id: 'magma', name: 'Лорд Магмы', cost: 500000000, img: 'https://images.unsplash.com/photo-1608962776856-42d71b3e7ec7?auto=format&fit=crop&w=150&q=80' }
-        ];
+<button
+id="findEnemy">
 
-        const DAILY_COMBO = ['m_btc', 't_tg', 'l_kyc'];
-        const COMBO_REWARD = 5000000;
+🔍 Найти противника
 
-        const CARDS_DATA = [
-            { id: 'm_btc', name: 'BTC Pairs', basePrice: 1000, baseProfit: 90, energyBonus: 100, clickBonus: 1, cat: 'markets', reqCard: null, reqLvl: 0, img: 'https://images.unsplash.com/photo-1621416894569-0f39ed31d247?auto=format&fit=crop&w=150&q=80' },
-            { id: 'm_eth', name: 'ETH Pairs', basePrice: 15000, baseProfit: 1200, energyBonus: 250, clickBonus: 2, cat: 'markets', reqCard: 'm_btc', reqLvl: 3, img: 'https://images.unsplash.com/photo-1622790698141-94e304bcbb06?auto=format&fit=crop&w=150&q=80' },
-            { id: 'm_sol', name: 'SOL Pairs', basePrice: 180000, baseProfit: 15000, energyBonus: 800, clickBonus: 5, cat: 'markets', reqCard: 'm_eth', reqLvl: 5, img: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=150&q=80' },
-            { id: 'm_meme', name: 'Meme Tech Pro', basePrice: 2500000, baseProfit: 180000, energyBonus: 3000, clickBonus: 15, cat: 'markets', reqCard: 'm_sol', reqLvl: 7, img: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=150&q=80' },
-            { id: 't_tg', name: 'Fenix Channel', basePrice: 2000, baseProfit: 150, energyBonus: 120, clickBonus: 1, cat: 'team', reqCard: null, reqLvl: 0, img: 'https://images.unsplash.com/photo-1614680376593-902f74fa0d41?auto=format&fit=crop&w=150&q=80' },
-            { id: 't_youtube', name: 'Fenix Studio', basePrice: 35000, baseProfit: 2900, energyBonus: 400, clickBonus: 3, cat: 'team', reqCard: 't_tg', reqLvl: 4, img: 'https://images.unsplash.com/photo-1548372290-8d01b6c8e78c?auto=format&fit=crop&w=150&q=80' },
-            { id: 't_tiktok', name: 'Viral Content', basePrice: 400000, baseProfit: 32000, energyBonus: 1500, clickBonus: 8, cat: 'team', reqCard: 't_youtube', reqLvl: 5, img: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=150&q=80' },
-            { id: 't_reddit', name: 'Global Reddit', basePrice: 6000000, baseProfit: 550000, energyBonus: 6000, clickBonus: 30, cat: 'team', reqCard: 't_tiktok', reqLvl: 6, img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=150&q=80' },
-            { id: 'l_kyc', name: 'Global KYC', basePrice: 10000, baseProfit: 850, energyBonus: 200, clickBonus: 2, cat: 'legal', reqCard: null, reqLvl: 0, img: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=150&q=80' },
-            { id: 'l_sec', name: 'SEC Pass', basePrice: 120000, baseProfit: 11000, energyBonus: 900, clickBonus: 4, cat: 'legal', reqCard: 'l_kyc', reqLvl: 4, img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=150&q=80' },
-            { id: 'l_dubai', name: 'Dubai HQ Office', basePrice: 1800000, baseProfit: 160000, energyBonus: 4500, clickBonus: 20, cat: 'legal', reqCard: 'l_sec', reqLvl: 5, img: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=150&q=80' },
-            { id: 'l_bank', name: 'Fenix Bank Corp', basePrice: 50000000, baseProfit: 4800000, energyBonus: 50000, clickBonus: 150, cat: 'legal', reqCard: 'l_dubai', reqLvl: 6, img: 'https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=150&q=80' }
-        ];
+</button>
 
-        CARDS_DATA.forEach(c => { if (game.cards[c.id] === undefined) game.cards[c.id] = 0; });
+<button
+id="startBattle">
 
-        function save() { localStorage.setItem('f_combat_v6_pro', JSON.stringify(game)); }
+⚔ Начать бой
 
-        function getTitleInfo(bal) {
-            let lvl = Math.floor(Math.sqrt(bal / 5000)) + 1;
-            if (lvl > 250) lvl = 250;
-            return { lvl: lvl, text: `Лорд Феникс (${lvl} ур)` };
-        }
+</button>
 
-        function applySkinTheme() {
-            document.body.className = ''; 
-            if (game.activeSkin !== 'default') { document.body.classList.add(`skin-${game.activeSkin}`); }
-            const skin = SKINS_DATA.find(s => s.id === game.activeSkin);
-            document.getElementById('fenix-avatar').src = skin.img;
-        }
+</div>
 
-        function updateUI() {
-            document.getElementById('display-balance').innerText = Math.floor(game.balance).toLocaleString();
-            document.getElementById('top-mult').innerText = '+' + game.mult;
-            document.getElementById('top-pph').innerText = '+' + Math.floor(game.pph).toLocaleString();
-            document.getElementById('current-energy').innerText = Math.floor(game.energy);
-            document.getElementById('max-energy').innerText = game.maxEnergy;
-            
-            let fillPct = (game.energy / game.maxEnergy) * 100;
-            document.getElementById('energy-fill-bar').style.width = fillPct + '%';
+<div
+id="battleLog">
 
-            let tInfo = getTitleInfo(game.balance);
-            document.getElementById('player-league').innerText = tInfo.text;
-            document.getElementById('profile-title-num').innerText = tInfo.lvl + " / 250";
+</div>
 
-            // Отрисовка комбо слотов
-            for(let i=0; i<3; i++) {
-                let slot = document.getElementById(`combo-${i}`);
-                if(game.comboHistory && game.comboHistory.includes(DAILY_COMBO[i])) {
-                    slot.innerText = "🔥";
-                    slot.classList.add('guessed');
-                } else {
-                    slot.innerText = "?";
-                    slot.classList.remove('guessed');
-                }
-            }
-        }
+</section>
 
-        // 💥 Логика кликов и летящего текста
-        document.getElementById('main-tap-target').addEventListener('touchstart', function(e) {
-            e.preventDefault();
-            let touchCount = e.targetTouches.length;
-            for(let i=0; i<touchCount; i++) {
-                let touch = e.targetTouches[i];
-                if(game.energy >= game.mult) {
-                    game.energy -= game.mult;
-                    game.balance += game.mult;
-                    createFloatingText(touch.pageX, touch.pageY, `+${game.mult}`);
-                }
-            }
-            save();
-            updateUI();
-        });
+<!-- ========================================= -->
+<!-- POPUPS -->
+<!-- ========================================= -->
 
-        function createFloatingText(x, y, text) {
-            let div = document.createElement('div');
-            div.className = 'floating-text';
-            div.style.left = `${x - 10}px`;
-            div.style.top = `${y - 20}px`;
-            div.innerText = text;
-            document.body.appendChild(div);
-            setTimeout(() => div.remove(), 600);
-        }
+<div
+id="toast"
+class="toast">
 
-        // ⛏️ Покупка карточек и проверка на комбо
-        function buyUpgrade(id, price, profit, eBonus, cBonus) {
-            if(game.balance >= price) {
-                game.balance -= price;
-                game.cards[id] = (game.cards[id] || 0) + 1;
-                game.pph += profit;
-                game.maxEnergy += eBonus;
-                game.mult += cBonus;
+<div id="toastText">
 
-                // Проверка комбо дня
-                if(DAILY_COMBO.includes(id) && !game.comboHistory.includes(id)) {
-                    game.comboHistory.push(id);
-                    if(game.comboHistory.length === 3 && !game.comboRewardClaimed) {
-                        game.balance += COMBO_REWARD;
-                        game.comboRewardClaimed = true;
-                        if(tg && tg.showAlert) tg.showAlert("🎉 Вы собрали супер комбо! Получено +5,000,000 монет!");
-                    }
-                }
+Успешно
 
-                save();
-                renderCards();
-                updateUI();
-            }
-        }
+</div>
 
-        function renderCards() {
-            const grids = { markets: 'grid-markets', team: 'grid-team', legal: 'grid-legal' };
-            Object.values(grids).forEach(gid => document.getElementById(gid).innerHTML = '');
+</div>
 
-            CARDS_DATA.forEach(c => {
-                let lvl = game.cards[c.id] || 0;
-                let price = Math.floor(c.basePrice * Math.pow(1.68, lvl));
-                let currentProfit = c.baseProfit * (lvl + 1);
+<div
+id="modal"
+class="modal">
 
-                let isLocked = false;
-                let lockText = "";
-                if (c.reqCard) {
-                    let parentLvl = game.cards[c.reqCard] || 0;
-                    if (parentLvl < c.reqLvl) {
-                        isLocked = true;
-                        let pName = CARDS_DATA.find(x => x.id === c.reqCard).name;
-                        lockText = `${pName} ${c.reqLvl} ур.`;
-                    }
-                }
+<div class="modalCard">
 
-                let btnHtml = isLocked 
-                    ? `<button class="card-buy-btn" disabled>🔒 ${lockText}</button>`
-                    : `<button class="card-buy-btn" onclick="buyUpgrade('${c.id}', ${price}, ${c.baseProfit}, ${c.energyBonus}, ${c.clickBonus})">🪙 ${price.toLocaleString()}</button>`;
+<h2 id="modalTitle">
 
-                let cardHtml = `
-                    <div class="card ${isLocked ? 'locked' : ''}">
-                        <div class="card-lvl">Lvl ${lvl}</div>
-                        <div class="card-img-wrapper"><img src="${c.img}"></div>
-                        <div class="card-name">${c.name}</div>
-                        <div class="card-desc">Прибыль +${c.baseProfit}/ч<br>⚡ Клик +${c.clickBonus}</div>
-                        <div class="card-profit-val">+${currentProfit.toLocaleString()}/ч</div>
-                        ${btnHtml}
-                    </div>`;
-                document.getElementById(grids[c.cat]).insertAdjacentHTML('beforeend', cardHtml);
-            });
-        }
+Заголовок
 
-        // 🏆 Динамический лидерборд с внедрением игрока
-        function renderLeaderboard() {
-            const container = document.getElementById('leaderboard-container');
-            container.innerHTML = '';
-            
-            let leaders = [];
-            for (let i = 1; i <= 100; i++) {
-                leaders.push({ name: `FenixBot_${i}`, balance: Math.floor(2000000000 / Math.pow(i, 0.75)) });
-            }
+</h2>
 
-            // Добавляем самого себя
-            leaders.push({ name: "Вы (Вы на стриме)", balance: game.balance, isSelf: true });
-            leaders.sort((a,b) => b.balance - a.balance);
+<p id="modalText">
 
-            leaders.slice(0, 100).forEach((l, idx) => {
-                let isTop3 = idx < 3;
-                let itemClass = l.isSelf ? 'leader-item self' : (isTop3 ? 'leader-item top3' : 'leader-item');
-                let rankDisplay = isTop3 ? ['🥇','🥈','🥉'][idx] : `#${idx+1}`;
+Текст
 
-                let html = `
-                    <div class="${itemClass}">
-                        <div class="leader-left">
-                            <span class="leader-rank">${rankDisplay}</span>
-                            <span style="font-weight:bold; font-size:13px;">${l.name}</span>
-                        </div>
-                        <span style="color:var(--neon-gold); font-weight:800; font-size:12px;">🪙 ${Math.floor(l.balance).toLocaleString()}</span>
-                    </div>`;
-                container.insertAdjacentHTML('beforeend', html);
-            });
-        }
+</p>
 
-        // 👑 Скины
-        function renderSkins() {
-            const container = document.getElementById('skins-container');
-            container.innerHTML = '';
-            SKINS_DATA.forEach(s => {
-                let isUnlocked = game.unlockedSkins.includes(s.id);
-                let isActive = game.activeSkin === s.id;
-                
-                let cardClass = isActive ? 'skin-card active' : 'skin-card';
-                let label = isActive ? 'Активен' : (isUnlocked ? 'Надеть' : `🪙 ${s.cost.toLocaleString()}`);
+<div class="modalButtons">
 
-                let html = `
-                    <div class="${cardClass}" onclick="handleSkinClick('${s.id}', ${s.cost})">
-                        <img class="skin-preview" src="${s.img}">
-                        <div style="font-size:12px; font-weight:bold; margin-bottom:4px;">${s.name}</div>
-                        <div style="font-size:10px; color:var(--neon-gold); font-weight:bold;">${label}</div>
-                    </div>`;
-                container.insertAdjacentHTML('beforeend', html);
-            });
-        }
+<button
+id="modalCancel">
 
-        function handleSkinClick(id, cost) {
-            if(game.unlockedSkins.includes(id)) {
-                game.activeSkin = id;
-            } else if(game.balance >= cost) {
-                game.balance -= cost;
-                game.unlockedSkins.push(id);
-                game.activeSkin = id;
-            } else {
-                return;
-            }
-            save(); applySkinTheme(); renderSkins(); updateUI();
-        }
+Отмена
 
-        // Промокоды и админка
-        function usePromoCode() {
-            let val = document.getElementById('promo-field').value.trim();
-            if(val === 'webFenixFenix') {
-                document.getElementById('admin-zone').style.display = 'block';
-                if(tg && tg.showAlert) tg.showAlert("Режим разработчика активирован!");
-            } else if (val === 'STREAM') {
-                game.balance += 1000000;
-                save(); updateUI();
-                alert("Промокод со стрима принят! +1,000,000 монет.");
-            }
-        }
+</button>
 
-        function adminGiveMoney(amt) { game.balance += amt; save(); updateUI(); }
-        function adminGivePPH(amt) { game.pph += amt; save(); updateUI(); }
-        function adminResetAll() { localStorage.clear(); location.reload(); }
+<button
+id="modalOk">
 
-        // Навигация
-        function navigate(screenId, btn) {
-            document.querySelectorAll('.main-content').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-            btn.classList.add('active');
-            if(screenId === 'screen-upgrades') renderCards();
-            if(screenId === 'screen-leaderboard') renderLeaderboard();
-            if(screenId === 'screen-profile') renderSkins();
-        }
+OK
 
-        function switchCategory(catId, btn) {
-            document.querySelectorAll('.category-block').forEach(c => c.style.display = 'none');
-            document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(catId).style.display = 'block';
-            btn.classList.add('active');
-        }
+</button>
 
-        // Пассивный доход в секунду и регенерация энергии
-        setInterval(() => {
-            // Доход в час делим на 3600
-            if(game.pph > 0) {
-                game.balance += (game.pph / 3600);
-            }
-            // Реген энергии +3/сек
-            if(game.energy < game.maxEnergy) {
-                game.energy = Math.min(game.maxEnergy, game.energy + 3);
-            }
-            updateUI();
-        }, 1000);
+</div>
 
-        // Старт игры
-        applySkinTheme();
-        updateUI();
-    </script>
+</div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- FLOATING +COINS -->
+<!-- ========================================= -->
+
+<div
+id="floatingContainer">
+
+</div>
+
+<!-- ========================================= -->
+<!-- BOTTOM MENU -->
+<!-- ========================================= -->
+
+<nav class="bottomMenu">
+
+<button
+class="navBtn active"
+data-screen="main">
+
+🏠
+
+<span>
+
+Main
+
+</span>
+
+</button>
+
+<button
+class="navBtn"
+data-screen="mine">
+
+⛏
+
+<span>
+
+Mine
+
+</span>
+
+</button>
+
+<button
+class="navBtn"
+data-screen="earn">
+
+🎁
+
+<span>
+
+Earn
+
+</span>
+
+</button>
+
+<button
+class="navBtn"
+data-screen="friends">
+
+👥
+
+<span>
+
+Friends
+
+</span>
+
+</button>
+
+<button
+class="navBtn"
+data-screen="top">
+
+🏆
+
+<span>
+
+Top
+
+</span>
+
+</button>
+
+<button
+class="navBtn"
+data-screen="pvp">
+
+⚔
+
+<span>
+
+PvP
+
+</span>
+
+</button>
+
+<button
+class="navBtn"
+data-screen="profile">
+
+👤
+
+<span>
+
+Profile
+
+</span>
+
+</button>
+
+</nav>
+
+</div>
+
+<script src="app.js"></script>
+
 </body>
+
 </html>
