@@ -10,7 +10,7 @@
 <body>
 
     <div id="loader">
-        <div class="loaderLogo"><img src="assets/ui/logo.png" alt="⚡"></div>
+        <div class="loaderLogo">🔥</div>
         <div class="loaderText">FENIX COMBAT</div>
     </div>
 
@@ -18,10 +18,10 @@
         
         <header class="topBar">
             <div class="profileMini">
-                <img id="topAvatar" src="assets/phoenix/level1.png" alt="🔥">
+                <img id="topAvatar" src="https://picsum.photos/100" alt="🔥">
                 <div>
-                    <div id="nickname">Fenix</div>
-                    <div class="levelText">LVL <span id="game-level">1</span></div>
+                    <div id="nickname">Loading...</div>
+                    <div class="levelText">LVL <span id="game-level">1</span> (<span id="phoenix-title">Новичок</span>)</div>
                 </div>
             </div>
             <div class="coinsBox">
@@ -31,16 +31,12 @@
         </header>
 
         <section id="screen-main" class="screen active">
-            <div class="incomeHourBox">
-                Доход в час: <span id="main-pph">0</span>
-            </div>
-
+            <div class="incomeHourBox">Доход в час: <span id="main-pph">0</span></div>
             <div class="phoenixWrapper">
                 <div id="tapButton" class="phoenixCircle">
-                    <img id="phoenixImage" src="assets/phoenix/level1.png" alt="Fenix">
+                    <div id="phoenixRender" class="phoenix-skin-1">🦅</div>
                 </div>
             </div>
-
             <div class="tapStats">
                 <div class="statCard">
                     <div id="main-tap-power" class="statValue">1</div>
@@ -51,120 +47,146 @@
                     <div class="statLabel">Баланс</div>
                 </div>
             </div>
-
             <div class="energyBox">
-                <div class="energyHeader">
-                    ⚡ <span id="current-energy">3000</span> / <span id="max-energy">3000</span>
-                </div>
-                <div class="energyBar">
-                    <div id="energyFill" style="width: 100%;"></div>
-                </div>
-            </div>
-
-            <div class="boostPanel">
-                <button id="boost-energy" class="boost">⚡<div>Energy</div></button>
-                <button id="boost-tap" class="boost">🔥<div>Tap</div></button>
-                <button id="boost-recharge" class="boost">♻<div>Recharge</div></button>
-                <button id="boost-full" class="boost">❤️<div>Full</div></button>
+                <div class="energyHeader">⚡ <span id="current-energy">3000</span> / <span id="max-energy">3000</span></div>
+                <div class="energyBar"><div id="energyFill" style="width: 100%;"></div></div>
             </div>
         </section>
 
         <section id="screen-mine" class="screen">
             <div class="pageHeader">
-                <h2>Mine</h2>
-                <div class="incomeCard">
-                    <div>Доход в час</div>
-                    <div id="mine-pph-display">0</div>
-                </div>
+                <h2>Майнинг</h2>
+                <div class="incomeCard">Доход/час: <span id="mine-pph-display">0</span></div>
             </div>
-
             <div class="comboBlock">
-                <div class="comboTop">🔥 DAILY COMBO <span id="combo-timer">23:47:20</span></div>
+                <div class="comboTop">🔥 DAILY COMBO <span id="combo-timer">23:59:59</span></div>
                 <div class="comboSlots" id="mine-combo-slots">
-                    <div class="comboSlot">?</div>
-                    <div class="comboSlot">?</div>
-                    <div class="comboSlot">?</div>
+                    <div class="comboSlot">?</div><div class="comboSlot">?</div><div class="comboSlot">?</div>
                 </div>
             </div>
-
             <div class="mineTabs">
                 <button class="mineTab active" data-category="all">Все</button>
                 <button class="mineTab" data-category="market">Маркет</button>
                 <button class="mineTab" data-category="legal">Юридические</button>
                 <button class="mineTab" data-category="team">Команда</button>
             </div>
-
-            <div id="cardsContainer" class="cardsGrid">
-                </div>
+            <div id="cardsContainer" class="cardsGrid"></div>
         </section>
 
         <section id="screen-earn" class="screen">
-            <h2>Ежедневная награда</h2>
-            <div class="dailyRewardsGrid">
-                <div class="dayBox claimed">День 1</div>
-                <div class="dayBox active-day">День 2</div>
-                <div class="dayBox">День 3</div>
-                <div class="dayBox">День 4</div>
-                <div class="dayBox">День 5</div>
+            <h2>Задания и Награды</h2>
+            <div class="dailyRewardsGrid" id="rewards-days-container"></div>
+            <button id="claim-daily-btn" class="actionBtn" style="margin-bottom:20px;">Забрать ежедневную награду</button>
+            
+            <div class="morseCard" style="margin-bottom: 15px;">
+                <h3>📡 Daily Morse (Награда: 15,000)</h3>
+                <div id="morse-input-display" style="font-size:24px; letter-spacing:4px; margin:10px 0; min-height:30px;"></div>
+                <button id="clear-morse-btn" class="buyCardBtn" style="width:auto; padding:5px 15px;">Сброс</button>
             </div>
 
-            <div class="tasksBlock">
-                <h3>Ежедневные задания</h3>
-                <div class="taskItem">
-                    <div>Зайди в игру (+5,000)</div>
-                    <button class="taskBtn" onclick="claimTask(5000, this)">CLAIM</button>
-                </div>
+            <div class="refCard">
+                <h3>🎁 Активация промокода</h3>
+                <input type="text" id="user-promo-input" placeholder="Введите промокод" style="width:100%; padding:10px; margin:10px 0; background:var(--bg); border:1px solid var(--border); color:#fff; border-radius:8px; text-transform: uppercase;">
+                <button id="user-promo-btn" class="actionBtn">Активировать</button>
             </div>
         </section>
 
         <section id="screen-friends" class="screen">
-            <h2>Реферальная система</h2>
+            <h2>Рефералы</h2>
             <div class="refCard">
-                <div class="refCodeBox">FENIX_48291</div>
-                <button class="actionBtn">📢 ПРИГЛАСИТЬ ДРУЗЕЙ</button>
+                <div class="refCodeBox" id="refLink">https://t.me/your_bot?start=user</div>
+                <button id="copy-ref-btn" class="actionBtn">📋 Скопировать ссылку</button>
+            </div>
+            <h3 style="margin-top:20px;">Ваши друзья:</h3>
+            <div class="leaderList" id="friends-list">
+                <div class="leaderItem" style="color:var(--text-muted)">Список пуст</div>
             </div>
         </section>
 
         <section id="screen-top" class="screen">
-            <h2>Leaderboard</h2>
+            <h2>Лидеры</h2>
             <div class="leaderList">
-                <div class="leaderItem">🥇 CryptoWhale (Lvl 56) <span>25.32M</span></div>
-                <div class="leaderItem">🥈 FenixKing (Lvl 52) <span>18.75M</span></div>
-                <div class="leaderItem">🥉 Blockchainer (Lvl 50) <span>15.26M</span></div>
+                <div class="leaderItem">🥇 CryptoWhale (Lvl 582) <span>999.4M</span></div>
+                <div class="leaderItem">🥈 FenixKing (Lvl 430) <span>43.2M</span></div>
+                <div class="leaderItem">🥉 Blockchainer (Lvl 312) <span>15.2M</span></div>
             </div>
-        </section>
-
-        <section id="screen-profile" class="screen">
-            <h2>Профиль</h2>
-            <div class="profileStatsList">
-                <div class="pStatRow">Всего тапов: <strong id="prof-taps">0</strong></div>
-                <div class="pStatRow">Уровень: <strong id="prof-lvl">1</strong></div>
-            </div>
-            <button id="open-admin" class="actionBtn" style="background:#d32f2f; margin-top:20px;">⚙ АДМИН ПАНЕЛЬ</button>
         </section>
 
         <section id="screen-pvp" class="screen">
-            <h2>⚔ PvP Arena</h2>
-            <button class="actionBtn" id="pvp-search-btn">НАЙТИ ПРОТИВНИКА</button>
-            <div id="pvp-log" style="margin-top: 15px; color: #aaa;"></div>
+            <h2>⚔️ PvP Арена</h2>
+            <div class="refCard" style="margin-bottom: 15px;">
+                <h3>Создать комнату</h3>
+                <input type="number" id="pvp-bet-input" placeholder="Ставка (мин. 1000)" style="width:100%; padding:10px; margin:10px 0; background:var(--bg); border:1px solid var(--border); color:#fff; border-radius:8px;">
+                <button id="pvp-create-btn" class="actionBtn">Создать лобби</button>
+            </div>
+            <h3>Доступные сражения:</h3>
+            <div class="leaderList" id="pvp-lobby-list"></div>
+        </section>
+
+        <section id="screen-profile" class="screen">
+            <h2>Профиль и Эволюция</h2>
+            <div class="profileStatsList">
+                <div class="pStatRow">Всего тапов: <strong id="prof-taps">0</strong></div>
+                <div class="pStatRow">Текущий уровень: <strong id="prof-lvl">1</strong></div>
+                <div class="pStatRow">Множитель эволюции: <strong id="prof-mult">x1.0</strong></div>
+            </div>
+
+            <h3 style="margin-top:20px; margin-bottom:10px;">Гардероб Феникса</h3>
+            <div class="skinsGrid" id="skins-container"></div>
+
+            <div class="refCard" style="margin-top: 30px; border-color: rgba(255, 67, 54, 0.3);">
+                <h3>🔒 Доступ разработчика</h3>
+                <input type="password" id="secret-key-input" placeholder="Введите Secret Key" style="width:100%; padding:10px; margin:10px 0; background:var(--bg); border:1px solid var(--border); color:#fff; border-radius:8px;">
+                <button id="open-admin-btn" class="actionBtn" style="background: #212121; color: #fff; border: 1px solid var(--border);">Проверить ключ</button>
+            </div>
         </section>
 
         <section id="screen-admin" class="screen">
-            <h2>👑 Панель Администратора</h2>
-            <button class="admBtn" id="adm-give-money">💰 Дать 1,000,000 Коинов</button>
-            <button class="admBtn" id="adm-reset">♻ Сбросить прогресс</button>
-            <button class="admBtn" id="adm-close" style="background:#555;">Закрыть</button>
-        </section>
+            <h2>👑 Панель Администратора (15+ функций)</h2>
+            
+            <div class="admin-scroll-container">
+                <div class="admin-group">
+                    <h4>🪙 Управление монетами</h4>
+                    <button class="admBtn success" id="adm-give-1m">1. Выдать 1,000,000 🪙</button>
+                    <button class="admBtn success" id="adm-give-100m">2. Выдать 100,000,000 🪙</button>
+                    <button class="admBtn danger" id="adm-take-1m">3. Списать 1,000,000 🪙</button>
+                    <button class="admBtn danger" id="adm-wipe-balance">4. Обнулить баланс 🪙</button>
+                </div>
 
-        <section id="screen-collection" class="screen">
-            <h2>Коллекция карточек</h2>
-            <div id="collection-grid" class="cardsGrid"></div>
-        </section>
+                <div class="admin-group">
+                    <h4>📈 Уровни и Тапы</h4>
+                    <div style="display:flex; gap:5px; margin-bottom:5px;">
+                        <input type="number" id="adm-lvl-input" placeholder="Уровень (1-600)" style="width:70%; padding:8px; background:var(--bg); color:#fff; border:1px solid var(--border); border-radius:6px;">
+                        <button class="admBtn" id="adm-set-lvl" style="margin:0; padding:8px;">5. Set</button>
+                    </div>
+                    <button class="admBtn primary" id="adm-max-lvl">6. Установить макс. 600 LVL</button>
+                    <button class="admBtn primary" id="adm-add-10k-taps">7. Прибавить +10,000 тапов</button>
+                    <button class="admBtn primary" id="adm-boost-tap-power">8. Умножить силу тапа на x2</button>
+                </div>
 
-        <section id="screen-combo-details" class="screen">
-            <h2>🎉 Комбо Собрано!</h2>
-            <div class="hugeReward">+5,000,000 🪙</div>
-            <button class="actionBtn" onclick="this.closest('.screen').classList.remove('active')">Отлично</button>
+                <div class="admin-group">
+                    <h4>🎁 Система промокодов</h4>
+                    <input type="text" id="adm-promo-name" placeholder="Название (например: BONUS2026)" style="width:100%; padding:8px; margin-bottom:5px; background:var(--bg); color:#fff; border:1px solid var(--border); border-radius:6px; text-transform:uppercase;">
+                    <input type="number" id="adm-promo-reward" placeholder="Сумма награды коинов" style="width:100%; padding:8px; margin-bottom:5px; background:var(--bg); color:#fff; border:1px solid var(--border); border-radius:6px;">
+                    <button class="admBtn success" id="adm-create-promo">9. Создать промокод</button>
+                    <button class="admBtn danger" id="adm-clear-promos">10. Удалить все промокоды</button>
+                </div>
+
+                <div class="admin-group">
+                    <h4>⚡ Ресурсы и Глобальные опции</h4>
+                    <button class="admBtn warning" id="adm-infinite-energy">11. Бесконечная энергия (100k)</button>
+                    <button class="admBtn warning" id="adm-add-pph">12. Добавить +50,000 в час</button>
+                    <button class="admBtn warning" id="adm-mass-reward">13. Раздача всем (Массовая)</button>
+                </div>
+
+                <div class="admin-group">
+                    <h4>🚫 Модерация</h4>
+                    <button class="admBtn danger" id="adm-toggle-ban">14. Переключить Бан / Разбан</button>
+                    <button class="admBtn danger" id="adm-hard-reset" style="background:#d32f2f;">15. Жесткий сброс (Все с нуля!)</button>
+                </div>
+            </div>
+
+            <button class="actionBtn" id="adm-close" style="background:#555; margin-top:15px;">Выйти из панели</button>
         </section>
 
         <nav class="bottomMenu">
@@ -173,7 +195,7 @@
             <button class="navBtn" data-screen="earn">🎁<span>Earn</span></button>
             <button class="navBtn" data-screen="friends">👥<span>Friends</span></button>
             <button class="navBtn" data-screen="top">🏆<span>Top</span></button>
-            <button class="navBtn" data-screen="pvp">⚔<span>PvP</span></button>
+            <button class="navBtn" data-screen="pvp">⚔️<span>PvP</span></button>
             <button class="navBtn" data-screen="profile">👤<span>Profile</span></button>
         </nav>
     </div>

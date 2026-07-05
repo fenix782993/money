@@ -1,232 +1,221 @@
-// --- ИГРОВАЯ БАЗА ДАННЫХ КАРТОЧЕК ---
-const INITIAL_CARDS = [
-    { id: "btc_farm", name: "Bitcoin Farm", baseCost: 35000, basePPH: 2430, category: "market", level: 0 },
-    { id: "eth_node", name: "Ethereum Node", baseCost: 28000, basePPH: 1890, category: "market", level: 0 },
-    { id: "sol_hub", name: "Solana Hub", baseCost: 22000, basePPH: 1450, category: "market", level: 0 },
-    { id: "legal_dept", name: "Legal Dept.", baseCost: 18000, basePPH: 1200, category: "legal", level: 0 },
-    { id: "marketing", name: "Marketing", baseCost: 15000, basePPH: 980, category: "team", level: 0 },
-    { id: "security", name: "Security Team", baseCost: 12000, basePPH: 850, category: "team", level: 0 }
+const tg = window.Telegram?.WebApp;
+if (tg) tg.expand();
+
+const tgUser = tg?.initDataUnsafe?.user || { id: 77777, first_name: "Fenix Player" };
+
+function getSecureHash(data) {
+    return btoa(encodeURIComponent(JSON.stringify(data)));
+}
+
+const PHOENIX_SKINS = [
+    { minLvl: 1, maxLvl: 10, name: "Яйцо Феникса", icon: "🥚", mult: 1.0 },
+    { minLvl: 11, maxLvl: 50, name: "Птенец", icon: "🐥", mult: 1.2 },
+    { minLvl: 51, maxLvl: 150, name: "Молодой Феникс", icon: "🦅", mult: 1.5 },
+    { minLvl: 151, maxLvl: 300, name: "Огненный Ястреб", icon: "🔥", mult: 2.0 },
+    { minLvl: 301, maxLvl: 500, name: "Магический Лорд", icon: "👑", mult: 3.0 },
+    { minLvl: 501, maxLvl: 600, name: "Бессмертный Феникс", icon: "🔱", mult: 5.0 }
 ];
 
-// --- ТЕКУЩЕЕЕ ЕЖЕДНЕВНОЕ КОМБО (Задано статически для теста) ---
-const DAILY_COMBO_IDS = ["btc_farm", "marketing", "legal_dept"];
-
-// --- СОСТОЯНИЕ ИГРЫ (Загрузка или дефолт) ---
-let player = JSON.parse(localStorage.getItem("fenix_player_save")) || {
-    balance: 5432129, // Стартовый баланс как на скрине
-    pph: 125430,
-    level: 123,
-    energy: 2780,
-    maxEnergy: 3000,
-    tapPower: 125,
-    totalTaps: 12430987,
+// ЧИСТЫЙ СТАРТ: По умолчанию у всех игроков всё начинается с НУЛЯ (0)
+let player = {
+    id: tgUser.id,
+    name: tgUser.first_name,
+    balance: 0,
+    pph: 0,
+    level: 1,
+    energy: 1000,
+    maxEnergy: 1000,
+    tapPower: 1,
+    totalTaps: 0,
     cards: {},
-    claimedCombo: false,
-    currentComboAnswers: []
+    isBanned: false,
+    usedPromos: []
 };
 
-// Заполнение пустых карточек при первом запуске
-INITIAL_CARDS.forEach(c => {
-    if (!player.cards[c.id]) player.cards[c.id] = 0;
-});
+// Хранилище промокодов на сессию (симуляция БД)
+let globalPromos = JSON.parse(localStorage.getItem("fenix_global_promos")) || {
+    "START2026": 50000,
+    "WEBFENIX": 100000
+};
 
-// --- СИСТЕМА ОБНОВЛЕНИЯ ИНТЕРФЕЙСА ---
+// Загрузка локальных сохранений
+const localSave = localStorage.getItem(`fenix_save_${player.id}`);
+const localHash = localStorage.getItem(`fenix_hash_${player.id}`);
+if (localSave && localHash) {
+    if (getSecureHash(JSON.parse(localSave)) === localHash) {
+        player = JSON.parse(localSave);
+    }
+}
+
+function saveGame() {
+    if(player.isBanned) return;
+    localStorage.setItem(`fenix_save_${player.id}`, JSON.stringify(player));
+    localStorage.setItem(`fenix_hash_${player.id}`, getSecureHash(player));
+    localStorage.setItem("fenix_global_promos", JSON.stringify(globalPromos));
+}
+
+function getSkinByLevel(lvl) {
+    return PHOENIX_SKINS.find(s => lvl >= s.minLvl && lvl <= s.maxLvl) || PHOENIX_SKINS[PHOENIX_SKINS.length - 1];
+}
+
 function updateUI() {
-    // Округление для красивого вывода целочисленных монет
-    const displayBalance = Math.floor(player.balance).toLocaleString();
+    if (player.isBanned) {
+        document.body.innerHTML = "<div style='color:#f44336; text-align:center; padding-top:20%; font-size:24px; font-family:sans-serif;'>🚫 Ваш аккаунт заблокирован администратором!</div>";
+        return;
+    }
+
+    const currentSkin = getSkinByLevel(player.level);
     
-    document.getElementById("top-balance").innerText = displayBalance;
-    document.getElementById("main-balance").innerText = displayBalance;
-    document.getElementById("main-pph").innerText = player.pph.toLocaleString();
-    document.getElementById("mine-pph-display").innerText = player.pph.toLocaleString();
+    document.getElementById("nickname").innerText = player.name;
     document.getElementById("game-level").innerText = player.level;
-    document.getElementById("main-tap-power").innerText = player.tapPower;
+    document.getElementById("phoenix-title").innerText = currentSkin.name;
+    document.getElementById("top-balance").innerText = Math.floor(player.balance).toLocaleString();
+    document.getElementById("main-balance").innerText = Math.floor(player.balance).toLocaleString();
+    document.getElementById("main-pph").innerText = player.pph.toLocaleString();
+    document.getElementById("main-tap-power").innerText = Math.floor(player.tapPower * currentSkin.mult);
     document.getElementById("current-energy").innerText = Math.floor(player.energy);
     document.getElementById("max-energy").innerText = player.maxEnergy;
+    document.getElementById("phoenixRender").innerText = currentSkin.icon;
     
-    // Профиль
     document.getElementById("prof-taps").innerText = player.totalTaps;
     document.getElementById("prof-lvl").innerText = player.level;
+    document.getElementById("prof-mult").innerText = `x${currentSkin.mult}`;
 
-    // Шкала энергии
     const energyPct = (player.energy / player.maxEnergy) * 100;
     document.getElementById("energyFill").style.width = `${energyPct}%`;
     
     saveGame();
 }
 
-function saveGame() {
-    localStorage.setItem("fenix_player_save", JSON.stringify(player));
-}
-
-// --- ТАП МЕХАНИКА ---
-document.getElementById("tapButton").addEventListener("click", (e) => {
-    if (player.energy >= player.tapPower) {
-        player.energy -= player.tapPower;
-        player.balance += player.tapPower;
+// Тапы
+document.getElementById("tapButton").addEventListener("click", () => {
+    const currentSkin = getSkinByLevel(player.level);
+    const finalTap = Math.floor(player.tapPower * currentSkin.mult);
+    
+    if (player.energy >= finalTap) {
+        player.energy -= finalTap;
+        player.balance += finalTap;
         player.totalTaps++;
-        
-        // Всплывающий текст коинов +125
-        createFloatingText(e.clientX, e.clientY, `+${player.tapPower}`);
         updateUI();
     }
 });
 
-function createFloatingText(x, y, text) {
-    const el = document.createElement("div");
-    el.className = "floating-coin";
-    el.innerText = text;
-    el.style.left = `${x}px`;
-    el.style.top = `${y}px`;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 800);
-}
-
-// --- ПАССИВНЫЙ ДОХОД И РЕГЕНЕРАЦИЯ ЭНЕРГИИ ---
+// Доход в секунду
 setInterval(() => {
-    // Доход в секунду = доход в час / 3600
     player.balance += (player.pph / 3600);
-    
-    // Регенерация энергии +3 в сек
     if (player.energy < player.maxEnergy) {
-        player.energy = Math.min(player.maxEnergy, player.energy + 3);
+        player.energy = Math.min(player.maxEnergy, player.energy + 2);
     }
     updateUI();
 }, 1000);
 
-// --- СИСТЕМА МАГАЗИНА (МАЙНИНГ) ---
-function renderCards(filterCategory = "all") {
-    const container = document.getElementById("cardsContainer");
-    container.innerHTML = "";
-
-    INITIAL_CARDS.forEach(cardData => {
-        if (filterCategory !== "all" && cardData.category !== filterCategory) return;
-
-        const currentLvl = player.cards[cardData.id] || 0;
-        // Прогрессивный расчет цены и доходности в зависимости от лвл карточки
-        const currentCost = Math.floor(cardData.baseCost * Math.pow(1.5, currentLvl));
-        const currentPPHGain = Math.floor(cardData.basePPH * Math.pow(1.2, currentLvl));
-
-        const cardEl = document.createElement("div");
-        cardEl.className = "mineCard";
-        cardEl.innerHTML = `
-            <div class="cardTitle">⚙️ ${cardData.name}</div>
-            <div class="cardInfo">Lvl ${currentLvl} | +${currentPPHGain}/ч</div>
-            <button class="buyCardBtn" ${player.balance < currentCost ? 'disabled' : ''}>
-                🪙 ${currentCost.toLocaleString()}
-            </button>
-        `;
-
-        // Клик покупки
-        cardEl.querySelector("button").addEventListener("click", () => {
-            if (player.balance >= currentCost) {
-                player.balance -= currentCost;
-                player.cards[cardData.id]++;
-                player.pph += currentPPHGain;
-                
-                checkCombo(cardData.id);
-                renderCards(filterCategory);
-                updateUI();
-            }
-        });
-
-        container.appendChild(cardEl);
-    });
-}
-
-// --- ПРОВЕРКА DAILY COMBO ---
-function checkCombo(cardId) {
-    if (player.claimedCombo) return;
-    
-    if (DAILY_COMBO_IDS.includes(cardId) && !player.currentComboAnswers.includes(cardId)) {
-        player.currentComboAnswers.push(cardId);
-        
-        // Отрендерить плашки на экране
-        const slots = document.getElementById("mine-combo-slots").children;
-        const index = player.currentComboAnswers.length - 1;
-        if(slots[index]) {
-            slots[index].innerText = "✅";
-            slots[index].style.background = "#4caf50";
-        }
-
-        // Если собрал все 3 уникальные нужные карточки
-        if (player.currentComboAnswers.length === 3) {
-            player.balance += 5000000;
-            player.claimedCombo = true;
-            document.getElementById("screen-combo-details").classList.add("active");
-        }
+// --- ВХОД В АДМИНКУ ПО СЕКРЕТНОМУ КЛЮЧУ ---
+document.getElementById("open-admin-btn").addEventListener("click", () => {
+    const key = document.getElementById("secret-key-input").value;
+    if (key === "webFenix1221") {
+        document.getElementById("screen-admin").classList.add("active");
+        document.getElementById("secret-key-input").value = "";
+    } else {
+        alert("❌ Неверный секретный ключ доступа!");
     }
-}
-
-// Переключение табов категорий карточек
-document.querySelectorAll(".mineTab").forEach(tab => {
-    tab.addEventListener("click", (e) => {
-        document.querySelectorAll(".mineTab").forEach(t => t.classList.remove('active'));
-        e.target.classList.add('active');
-        renderCards(e.target.getAttribute("data-category"));
-    });
-});
-
-// --- НАВИГАЦИЯ МЕЖДУ ЭКРАНАМИ ---
-document.querySelectorAll(".navBtn").forEach(btn => {
-    btn.addEventListener("click", (e) => {
-        const button = e.currentTarget;
-        document.querySelectorAll(".navBtn").forEach(b => b.classList.remove("active"));
-        document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-
-        button.classList.add("active");
-        const screenId = `screen-${button.getAttribute("data-screen")}`;
-        document.getElementById(screenId).classList.add("active");
-
-        if(button.getAttribute("data-screen") === "mine") {
-            renderCards();
-        }
-    });
-});
-
-// --- ДОПОЛНИТЕЛЬНЫЕ ФУНКЦИИ И АДМИНКА ---
-document.getElementById("open-admin").addEventListener("click", () => {
-    document.getElementById("screen-admin").classList.add("active");
 });
 document.getElementById("adm-close").addEventListener("click", () => {
     document.getElementById("screen-admin").classList.remove("active");
 });
-document.getElementById("adm-give-money").addEventListener("click", () => {
-    player.balance += 1000000;
-    updateUI();
-});
-document.getElementById("adm-reset").addEventListener("click", () => {
-    localStorage.removeItem("fenix_player_save");
-    location.reload();
+
+// --- АКТИВАЦИЯ ПРОМОКОДОВ ИГРОКОМ ---
+document.getElementById("user-promo-btn").addEventListener("click", () => {
+    const code = document.getElementById("user-promo-input").value.trim().toUpperCase();
+    if (!code) return;
+
+    if (player.usedPromos.includes(code)) {
+        alert("❌ Вы уже активировали этот промокод!");
+        return;
+    }
+
+    if (globalPromos[code] !== undefined) {
+        const reward = globalPromos[code];
+        player.balance += reward;
+        player.usedPromos.push(code);
+        document.getElementById("user-promo-input").value = "";
+        updateUI();
+        alert(`🎁 Промокод успешно активирован! Начислено: +${reward.toLocaleString()} коинов!`);
+    } else {
+        alert("❌ Такого промокода не существует!");
+    }
 });
 
-function claimTask(reward, btn) {
-    player.balance += reward;
-    btn.disabled = true;
-    btn.innerText = "CLAIMED";
-    updateUI();
+// --- РЕАЛИЗАЦИЯ 15 ФУНКЦИЙ АДМИН-ПАНЕЛИ ---
+document.getElementById("adm-give-1m").addEventListener("click", () => { player.balance += 1000000; updateUI(); });
+document.getElementById("adm-give-100m").addEventListener("click", () => { player.balance += 100000000; updateUI(); });
+document.getElementById("adm-take-1m").addEventListener("click", () => { player.balance = Math.max(0, player.balance - 1000000); updateUI(); });
+document.getElementById("adm-wipe-balance").addEventListener("click", () => { player.balance = 0; updateUI(); alert("Баланс обнулен!"); });
+
+document.getElementById("adm-set-lvl").addEventListener("click", () => {
+    const val = parseInt(document.getElementById("adm-lvl-input").value);
+    if (!isNaN(val) && val >= 1 && val <= 600) {
+        player.level = val; updateUI(); renderSkins();
+    }
+});
+document.getElementById("adm-max-lvl").addEventListener("click", () => { player.level = 600; updateUI(); renderSkins(); alert("Установлен 600 уровень!"); });
+document.getElementById("adm-add-10k-taps").addEventListener("click", () => { player.totalTaps += 10000; updateUI(); });
+document.getElementById("adm-boost-tap-power").addEventListener("click", () => { player.tapPower *= 2; updateUI(); alert("Базовая сила тапа умножена на 2!"); });
+
+document.getElementById("adm-create-promo").addEventListener("click", () => {
+    const name = document.getElementById("adm-promo-name").value.trim().toUpperCase();
+    const reward = parseInt(document.getElementById("adm-promo-reward").value);
+    if(name && !isNaN(reward)) {
+        globalPromos[name] = reward;
+        saveGame();
+        alert(`Промокод ${name} на сумму ${reward} создан!`);
+        document.getElementById("adm-promo-name").value = "";
+        document.getElementById("adm-promo-reward").value = "";
+    }
+});
+document.getElementById("adm-clear-promos").addEventListener("click", () => { globalPromos = {}; saveGame(); alert("Все промокоды удалены!"); });
+
+document.getElementById("adm-infinite-energy").addEventListener("click", () => { player.maxEnergy = 100000; player.energy = 100000; updateUI(); });
+document.getElementById("adm-add-pph").addEventListener("click", () => { player.pph += 50000; updateUI(); });
+document.getElementById("adm-mass-reward").addEventListener("click", () => { player.balance += 50000; updateUI(); alert("Всем отправлено по 50,000 коинов!"); });
+document.getElementById("adm-toggle-ban").addEventListener("click", () => { player.isBanned = !player.isBanned; updateUI(); });
+
+// 15-я критическая функция: Жесткий сброс всей базы данных
+document.getElementById("adm-hard-reset").addEventListener("click", () => {
+    if(confirm("Вы уверены, что хотите полностью стереть данные? Всё начнется с НУЛЯ.")) {
+        localStorage.clear();
+        location.reload();
+    }
+});
+
+// Навигация между вкладками приложения
+document.querySelectorAll(".navBtn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+        document.querySelectorAll(".navBtn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+        e.currentTarget.classList.add("active");
+        const target = `screen-${e.currentTarget.getAttribute("data-screen")}`;
+        document.getElementById(target).classList.add("active");
+        if(target === "screen-profile") renderSkins();
+    });
+});
+
+function renderSkins() {
+    const container = document.getElementById("skins-container");
+    container.innerHTML = "";
+    PHOENIX_SKINS.forEach((skin) => {
+        const isUnlocked = player.level >= skin.minLvl;
+        const card = document.createElement("div");
+        card.className = `skinItem ${!isUnlocked ? 'locked' : ''}`;
+        card.innerHTML = `
+            <div style="font-size:32px;">${isUnlocked ? skin.icon : "🔒"}</div>
+            <div style="font-size:11px; font-weight:bold; margin-top:5px;">${skin.name}</div>
+            <div style="font-size:9px; color:var(--text-muted)">Lvl ${skin.minLvl}+</div>
+        `;
+        container.appendChild(card);
+    });
 }
 
-// ПВП Логика заглушка
-document.getElementById("pvp-search-btn").addEventListener("click", () => {
-    const log = document.getElementById("pvp-log");
-    log.innerText = "Поиск соперника...";
-    setTimeout(() => {
-        const win = Math.random() > 0.4;
-        if(win) {
-            player.balance += 50000;
-            log.innerHTML = "<span style='color:#4caf50'>Победа! Вы выиграли 50,000 коинов!</span>";
-        } else {
-            log.innerHTML = "<span style='color:#f44336'>Поражение! Попробуйте еще раз.</span>";
-        }
-        updateUI();
-    }, 1500);
-});
-
-// --- СТАРТ ИГРЫ ---
 window.onload = () => {
-    setTimeout(() => {
-        document.getElementById("loader").style.display = "none";
-    }, 600);
+    setTimeout(() => document.getElementById("loader").style.display = "none", 600);
     updateUI();
 };
