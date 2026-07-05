@@ -1,1200 +1,183 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no">
-
-<title>🔥 Fenix Combat</title>
-
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-<link rel="stylesheet" href="style.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <title>🔥 Fenix Combat</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div id="loader">
-
-<div class="loaderLogo">
-
-<img src="assets/ui/logo.png">
-
-</div>
-
-<div class="loaderText">
-
-FENIX COMBAT
-
-</div>
-
-</div>
-
-<div id="subscribeScreen">
-
-<div class="subCard">
-
-<img
-class="subLogo"
-src="assets/ui/logo.png">
-
-<h2>
-
-🔥 Добро пожаловать
-
-</h2>
-
-<p>
-
-Для продолжения необходимо подписаться
-на официальный канал проекта.
-
-</p>
-
-<button id="joinChannel">
-
-📢 @qfenixqa
-
-</button>
-
-<button id="checkSub">
-
-✅ Проверить подписку
-
-</button>
-
-</div>
-
-</div>
-
-<div id="game">
-
-<header class="topBar">
-
-<div class="profileMini">
-
-<img
-id="topAvatar"
-src="assets/phoenix/level1.png">
-
-<div>
-
-<div id="nickname">
-
-Fenix
-
-</div>
-
-<div class="levelText">
-
-LEVEL
-
-<span id="level">
-
-1
-
-</span>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="coinsBox">
-
-<div class="coinsTitle">
-
-PHOENIX COINS
-
-</div>
-
-<div
-id="coins">
-
-0
-
-</div>
-
-</div>
-
-</header>
-
-<section
-id="screen-main"
-class="screen active">
-
-<div class="balanceBox">
-
-<div class="balanceLabel">
-
-ТВОЙ БАЛАНС
-
-</div>
-
-<div
-id="balance">
-
-0
-
-</div>
-
-</div>
-
-<div class="energyBox">
-
-<div class="energyHeader">
-
-⚡
-
-<span id="energy">
-
-3000
-
-</span>
-
-/
-
-<span id="maxEnergy">
-
-3000
-
-</span>
-
-</div>
-
-<div class="energyBar">
-
-<div
-id="energyFill">
-
-</div>
-
-</div>
-
-<div
-id="energyTimer">
-
-Полная энергия
-
-</div>
-
-</div>
-
-<div class="phoenixWrapper">
-
-<div
-id="tapButton"
-class="phoenixCircle">
-
-<img
-id="phoenixImage"
-src="assets/phoenix/level1.png">
-
-</div>
-
-</div>
-
-<div class="tapStats">
-
-<div class="statCard">
-
-<div class="statValue">
-
-+
-
-<span id="tapPower">
-
-1
-
-</span>
-
-</div>
-
-<div class="statLabel">
-
-За тап
-
-</div>
-
-</div>
-
-<div class="statCard">
-
-<div class="statValue">
-
-+
-
-<span id="income">
-
-0
-
-</span>
-
-</div>
-
-<div class="statLabel">
-
-В час
-
-</div>
-
-</div>
-
-</div>
-
-<div class="boostPanel">
-
-<button
-id="boostEnergy"
-class="boost">
-
-⚡
-
-<div>
-
-Energy
-
-</div>
-
-</button>
-
-<button
-id="boostTap"
-class="boost">
-
-🔥
-
-<div>
-
-Tap
-
-</div>
-
-</button>
-
-<button
-id="boostRecharge"
-class="boost">
-
-♻
-
-<div>
-
-Recharge
-
-</div>
-
-</button>
-
-<button
-id="boostFull"
-class="boost">
-
-❤️
-
-<div>
-
-Full
-
-</div>
-
-</button>
-
-</div>
-
-<div class="dailyCombo">
-
-<h3>
-
-🔥 DAILY COMBO
-
-</h3>
-
-<div
-id="comboCards">
-
-</div>
-
-</div>
-
-</section>
-<!-- ========================= -->
-<!-- MINE -->
-<!-- ========================= -->
-
-<section
-id="screen-mine"
-class="screen">
-
-<div class="pageHeader">
-
-<h2>
-
-⛏ Mine
-
-</h2>
-
-<div class="pageSub">
-
-Покупай карточки и увеличивай доход
-
-</div>
-
-</div>
-
-<div class="incomeCard">
-
-<div>
-
-Доход в час
-
-</div>
-
-<div
-id="pph">
-
-0
-
-</div>
-
-</div>
-
-<div class="mineTabs">
-
-<button
-class="mineTab active"
-data-tab="market">
-
-Market
-
-</button>
-
-<button
-class="mineTab"
-data-tab="legal">
-
-Legal
-
-</button>
-
-<button
-class="mineTab"
-data-tab="pr">
-
-PR
-
-</button>
-
-<button
-class="mineTab"
-data-tab="special">
-
-Special
-
-</button>
-
-</div>
-
-<div class="comboBlock">
-
-<div class="comboTop">
-
-🔥 DAILY COMBO
-
-<span id="comboTimer">
-
-23:59:59
-
-</span>
-
-</div>
-
-<div
-id="comboReward">
-
-Награда:
-5 000 000
-
-</div>
-
-<div
-id="comboContainer">
-
-</div>
-
-</div>
-
-<div class="mineSearch">
-
-<input
-type="text"
-id="cardSearch"
-placeholder="Поиск карточек...">
-
-</div>
-
-<div
-id="cardsContainer"
-class="cardsContainer">
-
-<!-- app.js -->
-
-</div>
-
-</section>
-
-<!-- ========================= -->
-<!-- EARN -->
-<!-- ========================= -->
-
-<section
-id="screen-earn"
-class="screen">
-
-<div class="pageHeader">
-
-<h2>
-
-🎁 Earn
-
-</h2>
-
-<div class="pageSub">
-
-Выполняй задания и получай монеты
-
-</div>
-
-</div>
-
-<div class="dailyRewardCard">
-
-<div class="rewardTitle">
-
-Ежедневная награда
-
-</div>
-
-<div
-id="rewardDays">
-
-</div>
-
-<button
-id="claimReward">
-
-Получить
-
-</button>
-
-</div>
-
-<div class="morseCard">
-
-<h3>
-
-📡 Daily Morse
-
-</h3>
-
-<p>
-
-Введите сегодняшнюю азбуку Морзе
-
-</p>
-
-<input
-id="morseInput"
-placeholder=".-- .-.">
-
-<button
-id="checkMorse">
-
-Проверить
-
-</button>
-
-</div>
-
-<div class="tasksBlock">
-
-<h3>
-
-🔥 Задания
-
-</h3>
-
-<div
-id="tasksContainer">
-
-</div>
-
-</div>
-
-</section>
-<!-- ========================= -->
-<!-- FRIENDS -->
-<!-- ========================= -->
-
-<section
-id="screen-friends"
-class="screen">
-
-<div class="pageHeader">
-
-<h2>
-
-👥 Friends
-
-</h2>
-
-<div class="pageSub">
-
-Приглашай друзей и получай бонусы
-
-</div>
-
-</div>
-
-<div class="refCard">
-
-<div class="refTitle">
-
-Твоя реферальная ссылка
-
-</div>
-
-<div class="refBox">
-
-<input
-id="refLink"
-readonly>
-
-<button
-id="copyRef">
-
-COPY
-
-</button>
-
-</div>
-
-</div>
-
-<div class="friendsStats">
-
-<div class="friendItem">
-
-<div class="friendValue"
-id="friendsCount">
-
-0
-
-</div>
-
-<div class="friendLabel">
-
-Друзей
-
-</div>
-
-</div>
-
-<div class="friendItem">
-
-<div class="friendValue"
-id="friendsIncome">
-
-0
-
-</div>
-
-<div class="friendLabel">
-
-Бонус
-
-</div>
-
-</div>
-
-</div>
-
-<div class="bonusCard">
-
-<h3>
-
-🎁 Групповые награды
-
-</h3>
-
-<div id="friendsRewards">
-
-</div>
-
-</div>
-
-<div class="friendsList">
-
-<h3>
-
-Приглашённые игроки
-
-</h3>
-
-<div id="friendsContainer">
-
-</div>
-
-</div>
-
-</section>
-
-<!-- ========================= -->
-<!-- LEADERBOARD -->
-<!-- ========================= -->
-
-<section
-id="screen-top"
-class="screen">
-
-<div class="pageHeader">
-
-<h2>
-
-🏆 Leaderboard
-
-</h2>
-
-<div class="pageSub">
-
-Лучшие игроки Fenix Combat
-
-</div>
-
-</div>
-
-<div class="leaderFilter">
-
-<button class="leaderBtn active">
-
-Сегодня
-
-</button>
-
-<button class="leaderBtn">
-
-Неделя
-
-</button>
-
-<button class="leaderBtn">
-
-Все
-
-</button>
-
-</div>
-
-<div
-id="leaderboard">
-
-</div>
-
-</section>
-
-<!-- ========================= -->
-<!-- PROFILE -->
-<!-- ========================= -->
-
-<section
-id="screen-profile"
-class="screen">
-
-<div class="profileHeader">
-
-<img
-id="profilePhoenix"
-src="assets/phoenix/level1.png">
-
-<div>
-
-<h2
-id="profileName">
-
-Fenix
-
-</h2>
-
-<div
-id="profileLevel">
-
-LVL 1
-
-</div>
-
-<div
-id="phoenixTitle">
-
-Новичок
-
-</div>
-
-</div>
-
-</div>
-
-<div class="profileStats">
-
-<div class="profileStat">
-
-<div id="statCoins">
-
-0
-
-</div>
-
-<span>
-
-Монет
-
-</span>
-
-</div>
-
-<div class="profileStat">
-
-<div id="statPPH">
-
-0
-
-</div>
-
-<span>
-
-В час
-
-</span>
-
-</div>
-
-<div class="profileStat">
-
-<div id="statEnergy">
-
-3000
-
-</div>
-
-<span>
-
-Энергия
-
-</span>
-
-</div>
-
-<div class="profileStat">
-
-<div id="statTaps">
-
-1
-
-</div>
-
-<span>
-
-За тап
-
-</span>
-
-</div>
-
-</div>
-
-<div class="skinsBlock">
-
-<h3>
-
-👕 Гардероб Феникса
-
-</h3>
-
-<div
-id="skinsContainer">
-
-</div>
-
-</div>
-
-<div class="communityBlock">
-
-<button
-id="tgChannel">
-
-📢 Telegram
-
-<br>
-
-@qfenixqa
-
-</button>
-
-<button
-id="supportBtn">
-
-🛠 Техподдержка
-
-<br>
-
-@webfenix
-
-</button>
-
-</div>
-
-<div class="promoBlock">
-
-<h3>
-
-🎁 Промокод
-
-</h3>
-
-<div class="promoBox">
-
-<input
-id="promoInput"
-placeholder="Введите промокод">
-
-<button
-id="promoBtn">
-
-Активировать
-
-</button>
-
-</div>
-
-</div>
-
-<!-- ADMIN PANEL -->
-
-<div
-id="adminPanel"
-class="adminPanel">
-
-<h2>
-
-👑 Панель администратора
-
-</h2>
-
-<div class="adminButtons">
-
-<button id="adminGiveCoins">
-
-💰 Give Coins
-
-</button>
-
-<button id="adminGivePPH">
-
-📈 Give PPH
-
-</button>
-
-<button id="adminBan">
-
-🚫 Ban
-
-</button>
-
-<button id="adminUnban">
-
-✅ Unban
-
-</button>
-
-<button id="adminBroadcast">
-
-📢 Broadcast
-
-</button>
-
-<button id="adminReset">
-
-♻ Reset
-
-</button>
-
-</div>
-
-</div>
-
-</section>
-<!-- ========================================= -->
-<!-- PvP -->
-<!-- ========================================= -->
-
-<section
-id="screen-pvp"
-<section id="screen-pvp" class="screen">
-    <div class="pageHeader">
-        <h2>⚔ PvP Arena</h2>
-        <div class="pageSub">Сражайся с другими игроками</div>
+    <div id="loader">
+        <div class="loaderLogo"><img src="assets/ui/logo.png" alt="⚡"></div>
+        <div class="loaderText">FENIX COMBAT</div>
     </div>
-    <div class="pvpCard" style="background:var(--panel); padding:18px; border-radius:var(--radius); text-align:center;">
-        <div id="enemyName" style="font-size:18px; font-weight:900; margin-bottom:15px;">Арена готова к бою</div>
-        <input id="pvpBetInput" type="number" placeholder="Введите ставку (мин. 1000)" style="width:100%; padding:12px; border-radius:12px; border:1px solid var(--border); background:#0f1117; color:white; margin-bottom:12px; outline:none;">
-        <button id="startPvPBtn" class="buy-btn">⚔ Найти бой</button>
+
+    <div id="game">
+        
+        <header class="topBar">
+            <div class="profileMini">
+                <img id="topAvatar" src="assets/phoenix/level1.png" alt="🔥">
+                <div>
+                    <div id="nickname">Fenix</div>
+                    <div class="levelText">LVL <span id="game-level">1</span></div>
+                </div>
+            </div>
+            <div class="coinsBox">
+                <div class="coinsTitle">PHOENIX COINS</div>
+                <div id="top-balance" class="coinCount">0</div>
+            </div>
+        </header>
+
+        <section id="screen-main" class="screen active">
+            <div class="incomeHourBox">
+                Доход в час: <span id="main-pph">0</span>
+            </div>
+
+            <div class="phoenixWrapper">
+                <div id="tapButton" class="phoenixCircle">
+                    <img id="phoenixImage" src="assets/phoenix/level1.png" alt="Fenix">
+                </div>
+            </div>
+
+            <div class="tapStats">
+                <div class="statCard">
+                    <div id="main-tap-power" class="statValue">1</div>
+                    <div class="statLabel">За тап</div>
+                </div>
+                <div class="statCard">
+                    <div id="main-balance" class="statValue">0</div>
+                    <div class="statLabel">Баланс</div>
+                </div>
+            </div>
+
+            <div class="energyBox">
+                <div class="energyHeader">
+                    ⚡ <span id="current-energy">3000</span> / <span id="max-energy">3000</span>
+                </div>
+                <div class="energyBar">
+                    <div id="energyFill" style="width: 100%;"></div>
+                </div>
+            </div>
+
+            <div class="boostPanel">
+                <button id="boost-energy" class="boost">⚡<div>Energy</div></button>
+                <button id="boost-tap" class="boost">🔥<div>Tap</div></button>
+                <button id="boost-recharge" class="boost">♻<div>Recharge</div></button>
+                <button id="boost-full" class="boost">❤️<div>Full</div></button>
+            </div>
+        </section>
+
+        <section id="screen-mine" class="screen">
+            <div class="pageHeader">
+                <h2>Mine</h2>
+                <div class="incomeCard">
+                    <div>Доход в час</div>
+                    <div id="mine-pph-display">0</div>
+                </div>
+            </div>
+
+            <div class="comboBlock">
+                <div class="comboTop">🔥 DAILY COMBO <span id="combo-timer">23:47:20</span></div>
+                <div class="comboSlots" id="mine-combo-slots">
+                    <div class="comboSlot">?</div>
+                    <div class="comboSlot">?</div>
+                    <div class="comboSlot">?</div>
+                </div>
+            </div>
+
+            <div class="mineTabs">
+                <button class="mineTab active" data-category="all">Все</button>
+                <button class="mineTab" data-category="market">Маркет</button>
+                <button class="mineTab" data-category="legal">Юридические</button>
+                <button class="mineTab" data-category="team">Команда</button>
+            </div>
+
+            <div id="cardsContainer" class="cardsGrid">
+                </div>
+        </section>
+
+        <section id="screen-earn" class="screen">
+            <h2>Ежедневная награда</h2>
+            <div class="dailyRewardsGrid">
+                <div class="dayBox claimed">День 1</div>
+                <div class="dayBox active-day">День 2</div>
+                <div class="dayBox">День 3</div>
+                <div class="dayBox">День 4</div>
+                <div class="dayBox">День 5</div>
+            </div>
+
+            <div class="tasksBlock">
+                <h3>Ежедневные задания</h3>
+                <div class="taskItem">
+                    <div>Зайди в игру (+5,000)</div>
+                    <button class="taskBtn" onclick="claimTask(5000, this)">CLAIM</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="screen-friends" class="screen">
+            <h2>Реферальная система</h2>
+            <div class="refCard">
+                <div class="refCodeBox">FENIX_48291</div>
+                <button class="actionBtn">📢 ПРИГЛАСИТЬ ДРУЗЕЙ</button>
+            </div>
+        </section>
+
+        <section id="screen-top" class="screen">
+            <h2>Leaderboard</h2>
+            <div class="leaderList">
+                <div class="leaderItem">🥇 CryptoWhale (Lvl 56) <span>25.32M</span></div>
+                <div class="leaderItem">🥈 FenixKing (Lvl 52) <span>18.75M</span></div>
+                <div class="leaderItem">🥉 Blockchainer (Lvl 50) <span>15.26M</span></div>
+            </div>
+        </section>
+
+        <section id="screen-profile" class="screen">
+            <h2>Профиль</h2>
+            <div class="profileStatsList">
+                <div class="pStatRow">Всего тапов: <strong id="prof-taps">0</strong></div>
+                <div class="pStatRow">Уровень: <strong id="prof-lvl">1</strong></div>
+            </div>
+            <button id="open-admin" class="actionBtn" style="background:#d32f2f; margin-top:20px;">⚙ АДМИН ПАНЕЛЬ</button>
+        </section>
+
+        <section id="screen-pvp" class="screen">
+            <h2>⚔ PvP Arena</h2>
+            <button class="actionBtn" id="pvp-search-btn">НАЙТИ ПРОТИВНИКА</button>
+            <div id="pvp-log" style="margin-top: 15px; color: #aaa;"></div>
+        </section>
+
+        <section id="screen-admin" class="screen">
+            <h2>👑 Панель Администратора</h2>
+            <button class="admBtn" id="adm-give-money">💰 Дать 1,000,000 Коинов</button>
+            <button class="admBtn" id="adm-reset">♻ Сбросить прогресс</button>
+            <button class="admBtn" id="adm-close" style="background:#555;">Закрыть</button>
+        </section>
+
+        <section id="screen-collection" class="screen">
+            <h2>Коллекция карточек</h2>
+            <div id="collection-grid" class="cardsGrid"></div>
+        </section>
+
+        <section id="screen-combo-details" class="screen">
+            <h2>🎉 Комбо Собрано!</h2>
+            <div class="hugeReward">+5,000,000 🪙</div>
+            <button class="actionBtn" onclick="this.closest('.screen').classList.remove('active')">Отлично</button>
+        </section>
+
+        <nav class="bottomMenu">
+            <button class="navBtn active" data-screen="main">🏠<span>Main</span></button>
+            <button class="navBtn" data-screen="mine">⛏<span>Mine</span></button>
+            <button class="navBtn" data-screen="earn">🎁<span>Earn</span></button>
+            <button class="navBtn" data-screen="friends">👥<span>Friends</span></button>
+            <button class="navBtn" data-screen="top">🏆<span>Top</span></button>
+            <button class="navBtn" data-screen="pvp">⚔<span>PvP</span></button>
+            <button class="navBtn" data-screen="profile">👤<span>Profile</span></button>
+        </nav>
     </div>
-</section>
-class="screen">
 
-<div class="pageHeader">
-
-<h2>
-
-⚔ PvP Arena
-
-</h2>
-
-<div class="pageSub">
-
-Сражайся с другими игроками
-
-</div>
-
-</div>
-
-<div class="pvpCard">
-
-<div class="enemyAvatar">
-
-<img
-id="enemyAvatar"
-src="assets/ui/enemy.png">
-
-</div>
-
-<div
-id="enemyName">
-
-Поиск соперника...
-
-</div>
-
-<div
-id="enemyLevel">
-
-LVL 0
-
-</div>
-
-<button
-id="findEnemy">
-
-🔍 Найти противника
-
-</button>
-
-<button
-id="startBattle">
-
-⚔ Начать бой
-
-</button>
-
-</div>
-
-<div
-id="battleLog">
-
-</div>
-
-</section>
-
-<!-- ========================================= -->
-<!-- POPUPS -->
-<!-- ========================================= -->
-
-<div
-id="toast"
-class="toast">
-
-<div id="toastText">
-
-Успешно
-
-</div>
-
-</div>
-
-<div
-id="modal"
-class="modal">
-
-<div class="modalCard">
-
-<h2 id="modalTitle">
-
-Заголовок
-
-</h2>
-
-<p id="modalText">
-
-Текст
-
-</p>
-
-<div class="modalButtons">
-
-<button
-id="modalCancel">
-
-Отмена
-
-</button>
-
-<button
-id="modalOk">
-
-OK
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- ========================================= -->
-<!-- FLOATING +COINS -->
-<!-- ========================================= -->
-
-<div
-id="floatingContainer">
-
-</div>
-
-<!-- ========================================= -->
-<!-- BOTTOM MENU -->
-<!-- ========================================= -->
-
-<nav class="bottomMenu">
-
-<button
-class="navBtn active"
-data-screen="main">
-
-🏠
-
-<span>
-
-Main
-
-</span>
-
-</button>
-
-<button
-class="navBtn"
-data-screen="mine">
-
-⛏
-
-<span>
-
-Mine
-
-</span>
-
-</button>
-
-<button
-class="navBtn"
-data-screen="earn">
-
-🎁
-
-<span>
-
-Earn
-
-</span>
-
-</button>
-
-<button
-class="navBtn"
-data-screen="friends">
-
-👥
-
-<span>
-
-Friends
-
-</span>
-
-</button>
-
-<button
-class="navBtn"
-data-screen="top">
-
-🏆
-
-<span>
-
-Top
-
-</span>
-
-</button>
-
-<button
-class="navBtn"
-data-screen="pvp">
-
-⚔
-
-<span>
-
-PvP
-
-</span>
-
-</button>
-
-<button
-class="navBtn"
-data-screen="profile">
-
-👤
-
-<span>
-
-Profile
-
-</span>
-
-</button>
-
-</nav>
-
-</div>
-
-<script src="app.js"></script>
-
+    <script src="app.js"></script>
 </body>
-
 </html>
