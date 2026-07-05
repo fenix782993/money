@@ -1,30 +1,386 @@
-/* Прокрутка для большого количества функций админки */
-.admin-scroll-container {
-    max-height: 70vh;
+/* ==========================================================================
+   1. СБРОС И ГЛОБАЛЬНЫЕ НАСТРОЙКИ (АДАПТАЦИЯ ПОД ПК И МОБИЛКИ)
+   ========================================================================== */
+:root {
+    --bg-dark: #08090c;
+    --panel-bg: #111319;
+    --panel-light: #1a1d26;
+    --border-color: #242834;
+    --accent-orange: #ff6b00;
+    --accent-yellow: #ffb800;
+    --gradient-accent: linear-gradient(135deg, #ff512f, #f09819);
+    --text-main: #ffffff;
+    --text-gray: #7e8494;
+    --green-success: #2ed573;
+    --red-danger: #ff4757;
+    --radius-main: 14px;
+    --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+/* Центрирование на ПК (имитация экрана телефона) */
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: var(--font-stack);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* Контейнер игры — жесткие рамки смартфона на ПК, на телефоне — во весь экран */
+#game {
+    background: #0d0f14;
+    width: 100%;
+    max-width: 420px; /* Идеальный размер под Telegram WebApp */
+    height: 100vh;
+    max-height: 840px; /* Чтобы на мониторах ПК была красивая рамка */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid var(--border-color);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+/* На мобильных устройствах убираем рамки ПК */
+@media (max-width: 440px) {
+    #game {
+        max-width: 100vw;
+        height: 100vh;
+        max-height: 100vh;
+        border: none;
+        border-radius: 0;
+    }
+}
+
+/* Управление видимостью экранов */
+.screen {
+    display: none;
+    flex: 1;
     overflow-y: auto;
-    padding-right: 5px;
-    margin-top: 10px;
+    padding: 16px;
+    padding-bottom: 90px; /* Место для нижнего таббара */
 }
 
-.admin-group {
-    background: var(--panel-light);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 12px;
-    margin-bottom: 15px;
+.screen.active {
+    display: block;
 }
 
-.admin-group h4 {
-    font-size: 13px;
-    color: var(--accent);
-    margin-bottom: 10px;
-    text-transform: uppercase;
+/* Стилизация скроллбара */
+.screen::-webkit-scrollbar, .admin-scroll-container::-webkit-scrollbar {
+    width: 4px;
+}
+.screen::-webkit-scrollbar-thumb, .admin-scroll-container::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 10px;
+}
+
+/* ==========================================================================
+   2. ШАПКА ИГРЫ (TOP BAR)
+   ========================================================================== */
+.topBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    background: var(--panel-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.profileMini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#topAvatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-orange);
+    background: #fff;
+}
+
+#nickname {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.levelText {
+    font-size: 11px;
+    color: var(--accent-yellow);
+    font-weight: 600;
+}
+
+.coinsBox {
+    text-align: right;
+}
+
+.coinsTitle {
+    font-size: 9px;
+    color: var(--text-gray);
     letter-spacing: 0.5px;
 }
 
-/* Стилизация внутренних кнопок админки */
-.admBtn.success { background: #2e7d32; border: none; color: #fff; }
-.admBtn.danger { background: #c62828; border: none; color: #fff; }
-.admBtn.warning { background: #ef6c00; border: none; color: #fff; }
-.admBtn.primary { background: #1565c0; border: none; color: #fff; }
-.admBtn:active { transform: scale(0.98); opacity: 0.9; }
+.coinCount {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--accent-yellow);
+}
+
+/* ==========================================================================
+   3. КНОПКИ И ОБЩИЕ ПАНЕЛИ
+   ========================================================================== */
+.actionBtn {
+    background: var(--gradient-accent);
+    color: #000;
+    border: none;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 12px;
+    width: 100%;
+    border-radius: var(--radius-main);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+.actionBtn:active {
+    transform: scale(0.98);
+}
+
+.refCard {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-main);
+    padding: 14px;
+    margin-bottom: 14px;
+}
+
+.refCard h3 {
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+/* ==========================================================================
+   4. ЭКРАН MAIN (КЛИКЕР)
+   ========================================================================== */
+.incomeHourBox {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--text-gray);
+    width: fit-content;
+    margin: 10px auto 20px auto;
+}
+.incomeHourBox span {
+    color: #fff;
+    font-weight: 700;
+}
+
+.phoenixWrapper {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.phoenixCircle {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,107,0,0.15) 0%, transparent 70%);
+    border: 3px solid rgba(255,107,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(255,107,0,0.05);
+}
+
+#phoenixRender {
+    font-size: 90px;
+    transition: transform 0.05s ease;
+}
+.phoenixCircle:active #phoenixRender {
+    transform: scale(0.85);
+}
+
+.tapStats {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.statCard {
+    flex: 1;
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: var(--radius-main);
+    text-align: center;
+}
+.statValue { font-size: 16px; font-weight: 700; color: #fff;}
+.statLabel { font-size: 11px; color: var(--text-gray); margin-top: 2px;}
+
+/* Энергия */
+.energyBox {
+    margin-top: 15px;
+}
+.energyHeader {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+.energyBar {
+    background: var(--panel-light);
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+#energyFill {
+    background: var(--gradient-accent);
+    height: 100%;
+    width: 100%;
+}
+
+/* ==========================================================================
+   5. ЭКРАН MINE (МАЙНИНГ КАРТОЧКИ)
+   ========================================================================== */
+.pageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+.incomeCard {
+    font-size: 12px;
+    background: var(--panel-bg);
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+#mine-pph-display { font-weight: 700; color: var(--accent-yellow); }
+
+.comboBlock {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-main);
+    padding: 12px;
+    margin-bottom: 14px;
+}
+.comboTop { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; margin-bottom: 8px; color: var(--text-gray); }
+.comboSlots { display: flex; gap: 8px; }
+.comboSlot {
+    flex: 1; height: 50px; background: var(--panel-light); border: 1px dashed var(--border-color);
+    border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold;
+}
+
+.mineTabs { display: flex; gap: 4px; margin-bottom: 14px; overflow-x: auto; }
+.mineTab {
+    background: var(--panel-bg); border: 1px solid var(--border-color); color: var(--text-gray);
+    padding: 6px 12px; border-radius: 20px; font-size: 12px; white-space: nowrap; cursor: pointer;
+}
+.mineTab.active { background: var(--gradient-accent); color: #000; font-weight: 700; border: none; }
+
+.cardsGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.mineCard {
+    background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: var(--radius-main);
+    padding: 12px; display: flex; flex-direction: column; justify-content: space-between; min-height: 120px;
+}
+.cardTitle { font-size: 13px; font-weight: 700; }
+.cardInfo { font-size: 11px; color: var(--text-gray); margin: 6px 0; }
+.buyCardBtn {
+    background: var(--panel-light); border: 1px solid var(--border-color); color: var(--accent-yellow);
+    width: 100%; padding: 6px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer;
+}
+
+/* ==========================================================================
+   6. ЗАДАНИЯ И РЕФЕРАЛЫ
+   ========================================================================== */
+.dailyRewardsGrid { display: flex; gap: 6px; margin: 12px 0; }
+.dayBox {
+    flex: 1; background: var(--panel-bg); border: 1px solid var(--border-color);
+    padding: 8px 4px; text-align: center; font-size: 10px; border-radius: 8px;
+}
+.morseCard { background: var(--panel-bg); border: 1px solid var(--border-color); padding: 14px; border-radius: var(--radius-main); }
+.refCodeBox { background: #000; padding: 10px; font-size: 12px; border-radius: 8px; word-break: break-all; margin-bottom: 10px; text-align: center; color: var(--text-gray); }
+
+.leaderList { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.leaderItem {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--panel-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; font-size: 13px;
+}
+
+/* Сетка скинов */
+.skinsGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.skinItem {
+    background: var(--panel-bg); border: 1px solid var(--border-color); padding: 10px;
+    border-radius: 10px; text-align: center;
+}
+.skinItem.locked { opacity: 0.3; border-style: dashed; }
+
+/* ==========================================================================
+   7. СУПЕР ПАНЕЛЬ АДМИНИСТРАТОРА (КОМПАКТНЫЕ СТИЛИ)
+   ========================================================================== */
+.admin-scroll-container { max-height: 65vh; overflow-y: auto; padding-right: 4px; }
+.admin-group {
+    background: var(--panel-light); border: 1px solid var(--border-color);
+    padding: 10px; border-radius: 10px; margin-bottom: 12px;
+}
+.admin-group h4 { font-size: 11px; text-transform: uppercase; color: var(--accent-orange); margin-bottom: 8px; }
+
+.admBtn {
+    background: #2b303c; color: #fff; border: 1px solid var(--border-color);
+    padding: 8px; font-size: 11px; width: 100%; border-radius: 6px; font-weight: bold;
+    margin-bottom: 6px; cursor: pointer; text-align: left;
+}
+.admBtn.success { background: var(--green-success); color: #000; }
+.admBtn.danger { background: var(--red-danger); color: #fff; }
+.admBtn.warning { background: var(--accent-yellow); color: #000; }
+.admBtn.primary { background: #007bff; color: #fff; }
+
+/* ==========================================================================
+   8. НИЖНЕЕ МЕНЮ (ТАББАР)
+   ========================================================================== */
+.bottomMenu {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 68px;
+    background: #111319fa;
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 999;
+}
+
+.navBtn {
+    background: none; border: none; color: var(--text-gray);
+    display: flex; flex-direction: column; align-items: center;
+    gap: 3px; cursor: pointer; font-size: 16px; flex: 1;
+}
+.navBtn span { font-size: 9px; font-weight: 500; }
+.navBtn.active { color: var(--accent-orange); }
+
+/* ЛОАДЕР */
+#loader {
+    position: absolute; top:0; left:0; bottom:0; right:0;
+    background: var(--bg-dark); z-index: 10000;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.loaderLogo { font-size: 50px; margin-bottom: 10px; }
+.loaderText { font-weight: bold; letter-spacing: 2px; font-size: 18px; color: var(--accent-orange); }
