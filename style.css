@@ -1,35 +1,29 @@
 /* ==========================================================================
-   1. СБРОС И ГЛОБАЛЬНЫЕ НАСТРОЙКИ (АДАПТАЦИЯ ПОД ПК И МОБИЛКИ)
+   ГЛОБАЛЬНЫЙ КИБЕРПАНК СТИЛЬ С АДАПТАЦИЕЙ ПОД ПК
    ========================================================================== */
 :root {
-    --bg-dark: #08090c;
-    --panel-bg: #111319;
-    --panel-light: #1a1d26;
-    --border-color: #242834;
-    --accent-orange: #ff6b00;
-    --accent-yellow: #ffb800;
-    --gradient-accent: linear-gradient(135deg, #ff512f, #f09819);
-    --text-main: #ffffff;
-    --text-gray: #7e8494;
-    --green-success: #2ed573;
-    --red-danger: #ff4757;
-    --radius-main: 14px;
-    --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --bg-black: #07080a;
+    --card-bg: #12141c;
+    --card-light: #1c1f2b;
+    --border: #252936;
+    --orange: #ff5e00;
+    --yellow: #ffb700;
+    --text: #ffffff;
+    --text-muted: #747a8a;
+    --radius: 12px;
 }
 
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    -webkit-tap-highlight-color: transparent;
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* Центрирование на ПК (имитация экрана телефона) */
 body {
-    background-color: var(--bg-dark);
-    color: var(--text-main);
-    font-family: var(--font-stack);
+    background-color: var(--bg-black);
+    color: var(--text);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -37,25 +31,26 @@ body {
     overflow: hidden;
 }
 
-/* Контейнер игры — жесткие рамки смартфона на ПК, на телефоне — во весь экран */
-#game {
-    background: #0d0f14;
+/* ЭМУЛЯЦИЯ СМАРТФОНА НА ПК */
+.game {
     width: 100%;
-    max-width: 420px; /* Идеальный размер под Telegram WebApp */
+    max-width: 415px;
     height: 100vh;
-    max-height: 840px; /* Чтобы на мониторах ПК была красивая рамка */
-    position: relative;
+    max-height: 820px;
+    background: #0b0c11;
+    border: 2px solid var(--border);
+    border-radius: 24px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.8);
     display: flex;
     flex-direction: column;
-    border: 2px solid var(--border-color);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-    border-radius: 24px;
+    justify-content: space-between;
+    position: relative;
     overflow: hidden;
 }
 
-/* На мобильных устройствах убираем рамки ПК */
+/* Если открыли с мобилки - убираем рамки ПК */
 @media (max-width: 440px) {
-    #game {
+    .game {
         max-width: 100vw;
         height: 100vh;
         max-height: 100vh;
@@ -64,323 +59,105 @@ body {
     }
 }
 
-/* Управление видимостью экранов */
+/* ЭКРАНЫ И СКРОЛЛ */
 .screen {
     display: none;
     flex: 1;
     overflow-y: auto;
-    padding: 16px;
-    padding-bottom: 90px; /* Место для нижнего таббара */
+    padding: 15px;
+    padding-bottom: 85px;
 }
+.screen.active { display: block; }
+.screen::-webkit-scrollbar, .admin-scroll::-webkit-scrollbar { width: 3px; }
+.screen::-webkit-scrollbar-thumb, .admin-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-.screen.active {
-    display: block;
-}
-
-/* Стилизация скроллбара */
-.screen::-webkit-scrollbar, .admin-scroll-container::-webkit-scrollbar {
-    width: 4px;
-}
-.screen::-webkit-scrollbar-thumb, .admin-scroll-container::-webkit-scrollbar-thumb {
-    background: var(--border-color);
-    border-radius: 10px;
-}
-
-/* ==========================================================================
-   2. ШАПКА ИГРЫ (TOP BAR)
-   ========================================================================== */
-.topBar {
+/* ВЕРХНЯЯ ЧАСТЬ */
+.top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 16px;
-    background: var(--panel-bg);
-    border-bottom: 1px solid var(--border-color);
+    padding: 12px 15px;
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
 }
+.user-block { display: flex; align-items: center; gap: 8px; }
+.avatar { font-size: 24px; background: #222; padding: 4px; border-radius: 50%; }
+.username { font-size: 13px; font-weight: bold; }
+.level { font-size: 10px; color: var(--yellow); }
+.coins { background: var(--card-light); padding: 5px 12px; border-radius: 20px; font-weight: 800; border: 1px solid var(--border); color: var(--yellow); }
 
-.profileMini {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+/* ЭКРАН ТАПАЛКИ */
+.income-info { text-align: center; background: var(--card-bg); width: fit-content; margin: 10px auto; padding: 4px 12px; border-radius: 15px; font-size: 12px; color: var(--text-muted); border: 1px solid var(--border); }
+.income-info span { color: #fff; font-weight: bold; }
 
-#topAvatar {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    border: 2px solid var(--accent-orange);
-    background: #fff;
-}
-
-#nickname {
-    font-size: 14px;
-    font-weight: 700;
-}
-
-.levelText {
-    font-size: 11px;
-    color: var(--accent-yellow);
-    font-weight: 600;
-}
-
-.coinsBox {
-    text-align: right;
-}
-
-.coinsTitle {
-    font-size: 9px;
-    color: var(--text-gray);
-    letter-spacing: 0.5px;
-}
-
-.coinCount {
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--accent-yellow);
-}
-
-/* ==========================================================================
-   3. КНОПКИ И ОБЩИЕ ПАНЕЛИ
-   ========================================================================== */
-.actionBtn {
-    background: var(--gradient-accent);
-    color: #000;
-    border: none;
-    font-weight: 700;
-    font-size: 14px;
-    padding: 12px;
-    width: 100%;
-    border-radius: var(--radius-main);
-    cursor: pointer;
-    transition: transform 0.1s ease;
-}
-.actionBtn:active {
-    transform: scale(0.98);
-}
-
-.refCard {
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-main);
-    padding: 14px;
-    margin-bottom: 14px;
-}
-
-.refCard h3 {
-    font-size: 14px;
-    margin-bottom: 8px;
-}
-
-/* ==========================================================================
-   4. ЭКРАН MAIN (КЛИКЕР)
-   ========================================================================== */
-.incomeHourBox {
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 12px;
-    color: var(--text-gray);
-    width: fit-content;
-    margin: 10px auto 20px auto;
-}
-.incomeHourBox span {
-    color: #fff;
-    font-weight: 700;
-}
-
-.phoenixWrapper {
-    display: flex;
-    justify-content: center;
-    margin: 30px 0;
-}
-
-.phoenixCircle {
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,107,0,0.15) 0%, transparent 70%);
-    border: 3px solid rgba(255,107,0,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 0 30px rgba(255,107,0,0.05);
-}
-
-#phoenixRender {
-    font-size: 90px;
+.tap-area { display: flex; justify-content: center; margin: 25px 0; }
+.circle {
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 94, 0, 0.2) 0%, transparent 70%);
+    border: 4px solid rgba(255, 94, 0, 0.3);
+    display: flex; justify-content: center; align-items: center;
+    font-size: 85px; cursor: pointer; box-shadow: 0 0 25px rgba(255, 94, 0, 0.1);
     transition: transform 0.05s ease;
 }
-.phoenixCircle:active #phoenixRender {
-    transform: scale(0.85);
-}
 
-.tapStats {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
+.stats-row { display: flex; gap: 8px; margin-bottom: 15px; }
+.stat-box { flex: 1; background: var(--card-bg); padding: 10px; border-radius: var(--radius); text-align: center; font-size: 12px; border: 1px solid var(--border); }
+.stat-box span { font-weight: bold; color: var(--orange); }
 
-.statCard {
-    flex: 1;
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    padding: 10px;
-    border-radius: var(--radius-main);
-    text-align: center;
-}
-.statValue { font-size: 16px; font-weight: 700; color: #fff;}
-.statLabel { font-size: 11px; color: var(--text-gray); margin-top: 2px;}
+.energy-section { margin-top: 10px; }
+.energy-text { text-align: center; font-size: 12px; font-weight: bold; margin-bottom: 4px; }
+.energy-bar { width: 100%; height: 10px; background: #222; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+#energyFill { height: 100%; width: 100%; background: linear-gradient(90deg, var(--orange), var(--yellow)); transition: width 0.1s; }
 
-/* Энергия */
-.energyBox {
-    margin-top: 15px;
-}
-.energyHeader {
-    text-align: center;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 6px;
-}
-.energyBar {
-    background: var(--panel-light);
-    height: 10px;
-    border-radius: 5px;
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-}
-#energyFill {
-    background: var(--gradient-accent);
-    height: 100%;
-    width: 100%;
-}
+/* МАЙНИНГ КАРТОЧКИ */
+.section-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; }
+.combo-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px; margin-bottom: 15px; }
+.combo-header { font-size: 11px; font-weight: bold; color: var(--text-muted); margin-bottom: 6px; }
+.combo-slots { display: flex; gap: 6px; }
+.c-slot { flex:1; height: 45px; background: var(--card-light); border: 1px dashed var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
 
-/* ==========================================================================
-   5. ЭКРАН MINE (МАЙНИНГ КАРТОЧКИ)
-   ========================================================================== */
-.pageHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-}
-.incomeCard {
-    font-size: 12px;
-    background: var(--panel-bg);
-    padding: 6px 12px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-}
-#mine-pph-display { font-weight: 700; color: var(--accent-yellow); }
+.tabs-row { display: flex; gap: 4px; margin-bottom: 15px; }
+.tab-sub { flex: 1; background: var(--card-bg); border: 1px solid var(--border); color: var(--text-muted); padding: 6px; border-radius: 20px; font-size: 11px; cursor: pointer; }
+.tab-sub.active { background: linear-gradient(135deg, var(--orange), var(--yellow)); color: #000; font-weight: bold; border: none; }
 
-.comboBlock {
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-main);
-    padding: 12px;
-    margin-bottom: 14px;
-}
-.comboTop { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; margin-bottom: 8px; color: var(--text-gray); }
-.comboSlots { display: flex; gap: 8px; }
-.comboSlot {
-    flex: 1; height: 50px; background: var(--panel-light); border: 1px dashed var(--border-color);
-    border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold;
-}
+.cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.mine-card { background: var(--card-bg); border: 1px solid var(--border); padding: 12px; border-radius: var(--radius); display: flex; flex-direction: column; justify-content: space-between; min-height: 115px; }
+.mine-card h4 { font-size: 13px; }
+.mine-card p { font-size: 10px; color: var(--text-muted); margin: 4px 0; }
+.buyCardBtn { background: var(--card-light); border: 1px solid var(--border); color: var(--yellow); padding: 5px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
 
-.mineTabs { display: flex; gap: 4px; margin-bottom: 14px; overflow-x: auto; }
-.mineTab {
-    background: var(--panel-bg); border: 1px solid var(--border-color); color: var(--text-gray);
-    padding: 6px 12px; border-radius: 20px; font-size: 12px; white-space: nowrap; cursor: pointer;
-}
-.mineTab.active { background: var(--gradient-accent); color: #000; font-weight: 700; border: none; }
+/* ОБЩИЕ ЭЛЕМЕНТЫ ПАНЕЛЕЙ */
+.panel-box { background: var(--card-bg); border: 1px solid var(--border); padding: 12px; border-radius: var(--radius); margin-bottom: 12px; }
+.panel-box h3 { font-size: 14px; margin-bottom: 6px; }
+.btn-action { background: linear-gradient(135deg, var(--orange), var(--yellow)); border: none; color: #000; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; margin-top: 8px; }
+input { width: 100%; padding: 10px; background: var(--card-light); border: 1px solid var(--border); color: #fff; border-radius: 8px; margin-top: 5px; outline: none; }
+.link-box { background: #000; padding: 8px; border-radius: 6px; font-size: 11px; color: var(--text-muted); word-break: break-all; }
 
-.cardsGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-.mineCard {
-    background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: var(--radius-main);
-    padding: 12px; display: flex; flex-direction: column; justify-content: space-between; min-height: 120px;
-}
-.cardTitle { font-size: 13px; font-weight: 700; }
-.cardInfo { font-size: 11px; color: var(--text-gray); margin: 6px 0; }
-.buyCardBtn {
-    background: var(--panel-light); border: 1px solid var(--border-color); color: var(--accent-yellow);
-    width: 100%; padding: 6px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer;
-}
+/* РЕЙТИНГИ И СКИНЫ */
+.leader-list { display: flex; flex-direction: column; gap: 8px; }
+.leader-row { display: flex; justify-content: space-between; background: var(--card-bg); padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; }
+.skins-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.skin-item { background: var(--card-bg); border: 1px solid var(--border); padding: 10px 4px; border-radius: 8px; text-align: center; }
+.skin-item.locked { opacity: 0.3; border-style: dashed; }
 
-/* ==========================================================================
-   6. ЗАДАНИЯ И РЕФЕРАЛЫ
-   ========================================================================== */
-.dailyRewardsGrid { display: flex; gap: 6px; margin: 12px 0; }
-.dayBox {
-    flex: 1; background: var(--panel-bg); border: 1px solid var(--border-color);
-    padding: 8px 4px; text-align: center; font-size: 10px; border-radius: 8px;
-}
-.morseCard { background: var(--panel-bg); border: 1px solid var(--border-color); padding: 14px; border-radius: var(--radius-main); }
-.refCodeBox { background: #000; padding: 10px; font-size: 12px; border-radius: 8px; word-break: break-all; margin-bottom: 10px; text-align: center; color: var(--text-gray); }
+/* АДМИНКА И ПРОКРУТКА */
+.admin-scroll { max-height: 50vh; overflow-y: auto; padding-right: 4px; }
+.adm-section { background: var(--card-light); border: 1px solid var(--border); padding: 8px; border-radius: 8px; margin-bottom: 10px; }
+.adm-section h5 { font-size: 11px; color: var(--orange); text-transform: uppercase; margin-bottom: 6px; }
+.adm-section button { width: 100%; padding: 6px; background: #2c303c; border: 1px solid var(--border); color: #fff; font-size: 11px; border-radius: 4px; margin-bottom: 4px; cursor: pointer; text-align: left; }
 
-.leaderList { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
-.leaderItem {
-    display: flex; justify-content: space-between; align-items: center;
-    background: var(--panel-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; font-size: 13px;
+/* НИЖНЯЯ НАВИГАЦИЯ */
+.bottom {
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 6px 4px; background: #10121aba; backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border); height: 65px;
 }
-
-/* Сетка скинов */
-.skinsGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.skinItem {
-    background: var(--panel-bg); border: 1px solid var(--border-color); padding: 10px;
-    border-radius: 10px; text-align: center;
-}
-.skinItem.locked { opacity: 0.3; border-style: dashed; }
-
-/* ==========================================================================
-   7. СУПЕР ПАНЕЛЬ АДМИНИСТРАТОРА (КОМПАКТНЫЕ СТИЛИ)
-   ========================================================================== */
-.admin-scroll-container { max-height: 65vh; overflow-y: auto; padding-right: 4px; }
-.admin-group {
-    background: var(--panel-light); border: 1px solid var(--border-color);
-    padding: 10px; border-radius: 10px; margin-bottom: 12px;
-}
-.admin-group h4 { font-size: 11px; text-transform: uppercase; color: var(--accent-orange); margin-bottom: 8px; }
-
-.admBtn {
-    background: #2b303c; color: #fff; border: 1px solid var(--border-color);
-    padding: 8px; font-size: 11px; width: 100%; border-radius: 6px; font-weight: bold;
-    margin-bottom: 6px; cursor: pointer; text-align: left;
-}
-.admBtn.success { background: var(--green-success); color: #000; }
-.admBtn.danger { background: var(--red-danger); color: #fff; }
-.admBtn.warning { background: var(--accent-yellow); color: #000; }
-.admBtn.primary { background: #007bff; color: #fff; }
-
-/* ==========================================================================
-   8. НИЖНЕЕ МЕНЮ (ТАББАР)
-   ========================================================================== */
-.bottomMenu {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 68px;
-    background: #111319fa;
-    backdrop-filter: blur(12px);
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 999;
-}
-
-.navBtn {
-    background: none; border: none; color: var(--text-gray);
-    display: flex; flex-direction: column; align-items: center;
-    gap: 3px; cursor: pointer; font-size: 16px; flex: 1;
-}
-.navBtn span { font-size: 9px; font-weight: 500; }
-.navBtn.active { color: var(--accent-orange); }
+.nav-btn { background: none; border: none; color: var(--text-muted); font-size: 15px; cursor: pointer; flex: 1; text-align: center; line-height: 1.2; }
+.nav-btn span { font-size: 9px; font-weight: 500; }
+.nav-btn.active { color: var(--orange); }
 
 /* ЛОАДЕР */
-#loader {
-    position: absolute; top:0; left:0; bottom:0; right:0;
-    background: var(--bg-dark); z-index: 10000;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-}
-.loaderLogo { font-size: 50px; margin-bottom: 10px; }
-.loaderText { font-weight: bold; letter-spacing: 2px; font-size: 18px; color: var(--accent-orange); }
+#loader { position: absolute; top:0; left:0; bottom:0; right:0; background: var(--bg-black); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.loader-logo { font-size: 45px; margin-bottom: 5px; animation: pulse 1.5s infinite ease-in-out; }
+.loader-text { font-size: 14px; font-weight: bold; letter-spacing: 2px; color: var(--orange); }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
